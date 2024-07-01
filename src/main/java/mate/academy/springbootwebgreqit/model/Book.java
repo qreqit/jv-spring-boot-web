@@ -1,15 +1,17 @@
 package mate.academy.springbootwebgreqit.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import java.math.BigDecimal;
 
 @Getter
 @Setter
 @Entity
+@SQLDelete(sql = "UPDATE books SET is_deleted = true where id = ?")
+@Where(clause = "is_deleted = false")
 @Table(name = "books")
 public class Book {
     @Id
@@ -27,4 +29,6 @@ public class Book {
     private String description;
     @Column(name = "cover_image", length = 255)
     private String coverImage;
+    @Column(nullable = false)
+    private boolean isDeleted = false;
 }
