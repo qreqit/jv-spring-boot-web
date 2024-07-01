@@ -3,12 +3,15 @@ package mate.academy.springbootwebgreqit.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDto;
+import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
 import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.BookMapper;
 import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.repository.BookRepository;
+import mate.academy.springbootwebgreqit.repository.BookSpecificationBuilder;
 import mate.academy.springbootwebgreqit.service.BookService;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
     private BookMapper bookMapper;
+    private BookSpecificationBuilder bookSpecificationBuilder;
 
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
@@ -48,5 +52,15 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto update(Long id) {
         return bookRepository.updateBookById(id);
+    }
+
+    @Override
+    public List<BookDto> search(BookSearchParameters params) {
+        Specification<Book> bookSpecification = bookSpecificationBuilder.build(params);
+        return bookRepository
+                .findAll(bookSpecification)
+                .stream()
+                .map(bookMapper::toDto)
+                .toList();
     }
 }
