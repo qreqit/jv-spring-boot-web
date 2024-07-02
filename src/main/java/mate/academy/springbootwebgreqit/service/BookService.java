@@ -3,6 +3,7 @@ package mate.academy.springbootwebgreqit.service;
 
 import mate.academy.springbootwebgreqit.dto.BookDto;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
+import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface BookService {
 
     void deleteById(Long id);
 
-    BookDto update(Long id);
+    BookDto update(Long id, UpdateBookRequestDto updateBookRequestDto);
 }

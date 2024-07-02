@@ -4,15 +4,14 @@ package mate.academy.springbootwebgreqit.service.impl;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDto;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
+import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
 import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.BookMapper;
 import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.repository.BookRepository;
 import mate.academy.springbootwebgreqit.service.BookService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -46,7 +45,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto update(Long id) {
-        return bookRepository.updateBookById(id);
+    public BookDto update(Long id, UpdateBookRequestDto updateBookRequestDto) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find book by id" + id));
+
+        book.setTitle(updateBookRequestDto.getTitle());
+        book.setAuthor(updateBookRequestDto.getAuthor());
+
+        Book updateBook = bookRepository.save(book);
+        return bookMapper.toDto(updateBook);
     }
 }

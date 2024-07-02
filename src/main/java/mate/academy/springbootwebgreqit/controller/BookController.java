@@ -3,6 +3,7 @@ package mate.academy.springbootwebgreqit.controller;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDto;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
+import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
 import mate.academy.springbootwebgreqit.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,8 @@ public  class BookController {
     }
 
     @PutMapping("/{id}")
-    public BookDto updateBook(@PathVariable Long id) {
-        return bookService.update(id);
+    public BookDto updateBook(@PathVariable Long id, UpdateBookRequestDto updateBookRequestDto) {
+        return bookService.update(id,updateBookRequestDto);
     }
 
     @DeleteMapping("/{id}")
