@@ -1,6 +1,4 @@
 databaseChangeLog:
   - include:
       file: src/main/resources/db/chandelog/changes/01-create-table-books.yaml
-  - include:
-      file: src/main/resources/db/chandelog/changes/02-add-column-isDeleted-to-books-table.yaml
 
