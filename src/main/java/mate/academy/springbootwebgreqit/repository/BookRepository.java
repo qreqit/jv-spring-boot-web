@@ -11,4 +11,5 @@ import java.util.Map;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
+
 }

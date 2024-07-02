@@ -19,11 +19,11 @@ public class Book {
     private Long id;
     @Column(length = 100)
     private String title;
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String author;
     @Column(unique = true, length = 13)
     private String isbn;
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(precision = 10, scale = 2)
     private BigDecimal price;
     @Column(length = 2000)
     private String description;
