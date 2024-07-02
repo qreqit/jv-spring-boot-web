@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDto;
 import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
+import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
 import mate.academy.springbootwebgreqit.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value =  "/books")
+@RequestMapping("/books")
 public  class BookController {
     private BookService bookService;
 
@@ -32,12 +33,12 @@ public  class BookController {
     }
 
     @PutMapping("/{id}")
-    public BookDto updateBook(@PathVariable Long id) {
-        return bookService.update(id);
+    public BookDto updateBook(@PathVariable Long id, UpdateBookRequestDto updateBookRequestDto) {
+        return bookService.update(id, updateBookRequestDto);
     }
 
     @DeleteMapping("/{id}")
-    public void  deleteBook(@PathVariable Long id) {
+    public void deleteBook(@PathVariable Long id) {
         bookService.deleteById(id);
     }
 

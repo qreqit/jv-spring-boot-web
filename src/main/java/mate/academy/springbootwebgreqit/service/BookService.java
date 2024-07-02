@@ -4,6 +4,8 @@ package mate.academy.springbootwebgreqit.service;
 import mate.academy.springbootwebgreqit.dto.BookDto;
 import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
+import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,11 +14,11 @@ public interface BookService {
 
     List<BookDto> findAll();
 
-    public BookDto findById(Long id);
+    BookDto findById(Long id);
 
-    public void deleteById(Long id);
+    void deleteById(Long id);
 
-    public BookDto update(Long id);
+    BookDto update(Long id, UpdateBookRequestDto updateBookRequestDto);
 
     public List<BookDto> search(BookSearchParameters params);
 }
