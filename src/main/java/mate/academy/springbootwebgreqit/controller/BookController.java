@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value =  "/books")
+@RequestMapping("/books")
 public  class BookController {
     private BookService bookService;
 
@@ -36,7 +36,7 @@ public  class BookController {
     }
 
     @DeleteMapping("/{id}")
-    public void  deleteBook(@PathVariable Long id) {
+    public void deleteBook(@PathVariable Long id) {
         bookService.deleteById(id);
     }
 }

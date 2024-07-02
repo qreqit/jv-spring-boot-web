@@ -5,5 +5,4 @@ import mate.academy.springbootwebgreqit.model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
-    BookDto updateBookById (Long id);
 }
