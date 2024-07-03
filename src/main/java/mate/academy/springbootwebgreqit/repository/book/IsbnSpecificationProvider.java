@@ -9,9 +9,11 @@ import java.util.Arrays;
 
 @Component
 public class IsbnSpecificationProvider implements SpecificationProvider<Book> {
+    private static final String KEY = "isbn";
+
     @Override
     public String getKey() {
-        return "isbn";
+        return KEY;
     }
 
     @Override
