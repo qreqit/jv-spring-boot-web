@@ -131,7 +131,7 @@
                 <artifactId>liquibase-core</artifactId>
                 <version>${liquibase.version}</version>
                 <configuration>
-                    <propertyFille>src/main/resources/liquibase.properties</propertyFille>
+                    <propertyFile>src/main/resources/liquibase.properties</propertyFile>
                 </configuration>
             </plugin>
         </plugins>

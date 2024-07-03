@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:/db/chandelog/changes/01-create-table-books.yaml
+

@@ -1,4 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: src/main/resources/db/chandelog/changes/01-create-table-books.yaml
-
