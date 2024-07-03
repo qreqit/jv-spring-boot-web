@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class UpdateBookRequestDto {
+    private Long id;
     private String title;
     private String author;
     private String isbn;
