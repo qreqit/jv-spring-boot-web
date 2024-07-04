@@ -10,7 +10,7 @@ import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.BookMapper;
 import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.repository.BookRepository;
-import mate.academy.springbootwebgreqit.repository.BookSpecificationBuilder;
+import mate.academy.springbootwebgreqit.repository.filter.BookSpecificationBuilder;
 import mate.academy.springbootwebgreqit.service.BookService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;

@@ -1,14 +1,15 @@
-package mate.academy.springbootwebgreqit.repository;
+package mate.academy.springbootwebgreqit.repository.filter;
 
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
 import mate.academy.springbootwebgreqit.model.Book;
+import mate.academy.springbootwebgreqit.repository.SpecificationBuilder;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class BookSpecificationBuilder implements SpecificationBuilder<Book>{
+public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
     private static final String ISBN_KEY = "isbn";
     private static final String TITLE_KEY = "title";
     private static final String AUTHOR_KEY = "author";
