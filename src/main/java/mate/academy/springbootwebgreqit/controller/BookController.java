@@ -46,5 +46,4 @@ public  class BookController {
     public List<BookDto> searchBooks(BookSearchParameters searchParameters) {
         return bookService.search(searchParameters);
     }
-
 }
