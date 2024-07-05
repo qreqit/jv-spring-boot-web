@@ -7,8 +7,6 @@ import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
 import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
 import mate.academy.springbootwebgreqit.service.BookService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +18,8 @@ public  class BookController {
     private BookService bookService;
 
     @GetMapping
-    public Page<BookDto> getAll(Pageable pageable) {
-        return bookService.findAll(pageable);
+    public List<BookDto> getAll() {
+        return bookService.findAll();
     }
 
     @GetMapping("/{id}")
