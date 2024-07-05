@@ -1,6 +1,8 @@
 package mate.academy.springbootwebgreqit.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
@@ -16,18 +18,26 @@ import java.math.BigDecimal;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Long id;
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
+    @NotNull
     private String title;
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
+    @NotNull
     private String author;
-    @Column(nullable = false, unique = true, length = 13)
+    @Column(unique = true, length = 13)
+    @NotNull
     private String isbn;
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(precision = 10, scale = 2)
+    @NotNull
+    @Min(0)
     private BigDecimal price;
-    @Column(nullable = false, length = 2000)
+    @Column( length = 2000)
+    @NotNull
     private String description;
-    @Column(nullable = false, length = 255)
+    @Column(length = 255)
+    @NotNull
     private String coverImage;
     private boolean isDeleted = false;
 }
