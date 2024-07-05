@@ -36,6 +36,7 @@
         <liquibase-maven-plugin.version>4.28.0</liquibase-maven-plugin.version>
         <liquibase.version>4.28.0</liquibase.version>
         <javax.servlet.version>4.0.1</javax.servlet.version>
+        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
     </properties>
     <dependencies>
         <dependency>
@@ -44,11 +45,16 @@
         </dependency>
 
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>3.3.0</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.liquibase</groupId>
