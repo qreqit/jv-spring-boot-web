@@ -1,6 +1,5 @@
 package mate.academy.springbootwebgreqit.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDto;
 import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
@@ -29,12 +28,12 @@ public  class BookController {
     }
 
     @PostMapping
-    public BookDto createBook(@Valid @RequestBody CreateBookRequestDto requestDto) {
+    public BookDto createBook(@RequestBody CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
     @PutMapping("/{id}")
-    public BookDto updateBook(@Valid @RequestBody UpdateBookRequestDto updateBookRequestDto) {
+    public BookDto updateBook(@RequestBody UpdateBookRequestDto updateBookRequestDto) {
         return bookService.update(updateBookRequestDto);
     }
 
