@@ -37,6 +37,7 @@
         <liquibase.version>4.28.0</liquibase.version>
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
+        <swagger-annotations.version>1.6.14</swagger-annotations.version>
     </properties>
     <dependencies>
         <dependency>
@@ -62,6 +63,13 @@
             <artifactId>liquibase-maven-plugin</artifactId>
             <version>${liquibase-maven-plugin.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-annotations.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>

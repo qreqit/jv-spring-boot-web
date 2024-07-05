@@ -12,8 +12,11 @@ import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.repository.BookRepository;
 import mate.academy.springbootwebgreqit.repository.filter.BookSpecificationBuilder;
 import mate.academy.springbootwebgreqit.service.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,10 +34,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findAll() {
-        return bookRepository.findAll().stream()
-                .map(bookMapper::toDto)
-                .toList();
+    public Page<BookDto> findAll(Pageable pageable) {
+        Page<Book> bookPage = bookRepository.findAll(pageable);
+        return  bookPage.map(bookMapper::toDto);
     }
 
     @Override
