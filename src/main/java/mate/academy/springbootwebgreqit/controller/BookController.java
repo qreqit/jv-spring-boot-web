@@ -7,7 +7,6 @@ import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
 import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
 import mate.academy.springbootwebgreqit.service.BookService;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/books")
 public  class BookController {
-    private BookService bookService;
+    private final BookService bookService;
 
     @GetMapping
     public List<BookDto> getAll() {
