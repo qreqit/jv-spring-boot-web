@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MapperConfig;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(config = MapperConfig.class)
+@Mapper(componentModel = "spring")
 public interface UserMapper {
     UserResponseDto toDto(User user);
 }
