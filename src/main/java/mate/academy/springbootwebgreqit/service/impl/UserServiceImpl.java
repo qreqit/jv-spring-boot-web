@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new RegistrationException("Can't register user");
         }
-        User user = new User();
+        User user = userMapper.toUser(requestDto);
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
     }
