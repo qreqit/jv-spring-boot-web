@@ -16,5 +16,5 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public interface UserMapper {
     UserResponseDto toDto(User user);
 
-    User toUser(UserRegistrationRequestDto responseEntityExceptionHandler);
+    User toUser(UserRegistrationRequestDto requestDto);
 }
