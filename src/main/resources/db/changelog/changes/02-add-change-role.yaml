@@ -72,7 +72,7 @@ databaseChangeLog:
       author: qreqit
       changes:
         - insert:
-            tableName: user_roles
+            tableName: users_roles
             columns:
               - column:
                   name: user_id
