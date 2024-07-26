@@ -31,6 +31,5 @@ public class Book {
     private String description;
     @Column(nullable = false, length = 255)
     private String coverImage;
-    @Column(name = "is_deleted")
     private boolean isDeleted = false;
 }

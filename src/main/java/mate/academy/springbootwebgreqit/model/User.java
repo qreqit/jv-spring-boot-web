@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +18,7 @@ import java.util.Set;
 @Setter
 @Entity
 @SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
-@Where(clause = "is_deleted = false")
+@SQLRestriction("is_deleted = false")
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
@@ -34,13 +36,13 @@ public class User implements UserDetails {
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
-            name = "user_roles",
+            name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -72,7 +74,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return !isDeleted;
     }
 
     @Override
