@@ -1,16 +1,20 @@
 package mate.academy.springbootwebgreqit.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import mate.academy.springbootwebgreqit.dto.user.UserRegistrationRequestDto;
+import mate.academy.springbootwebgreqit.dto.user.UserResponseDto;
+import mate.academy.springbootwebgreqit.service.UserService;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthenticationController {
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/dashboard")
-    public String getAdminDashboard() {
-        return "Admin DashBoard";
+    private final UserService userService;
+
+    @PostMapping("/registration")
+    public UserResponseDto registerUser(@RequestBody UserRegistrationRequestDto requestBody) {
+        return userService.register(requestBody);
     }
 }
+

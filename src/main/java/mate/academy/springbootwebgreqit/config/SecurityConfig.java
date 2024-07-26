@@ -1,5 +1,6 @@
 package mate.academy.springbootwebgreqit.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -13,12 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @EnableMethodSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
-    private UserDetailsService userDetailsService;
-
-    public SecurityConfig(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    private final UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
