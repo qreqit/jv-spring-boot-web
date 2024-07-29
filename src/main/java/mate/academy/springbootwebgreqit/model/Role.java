@@ -3,7 +3,7 @@ package mate.academy.springbootwebgreqit.model;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
-@Table
+@Table(name = "roles")
 @Entity
 public class Role implements GrantedAuthority {
     @Id
