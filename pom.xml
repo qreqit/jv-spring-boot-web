@@ -38,7 +38,7 @@
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <spring-boot-starter-security.version>3.3.2</spring-boot-starter-security.version>
-        <jjwt.version>0.12.6</jjwt.version>
+        <jjwt.version>0.11.5</jjwt.version>
     </properties>
     <dependencies>
         <dependency>
