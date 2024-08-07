@@ -1,5 +1,6 @@
 package mate.academy.springbootwebgreqit.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.user.UserLoginRequestDto;
 import mate.academy.springbootwebgreqit.dto.user.UserLoginResponseDto;
@@ -17,12 +18,12 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/registration")
-    public UserResponseDto registerUser(@RequestBody UserRegistrationRequestDto requestBody) {
+    public UserResponseDto register(@RequestBody @Valid UserRegistrationRequestDto requestBody) {
         return userService.register(requestBody);
     }
 
     @PostMapping("/login")
-    public UserLoginResponseDto loginUser(@RequestBody UserLoginRequestDto response) {
+    public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto response) {
         return authenticationService.authenticate(response);
     }
 }
