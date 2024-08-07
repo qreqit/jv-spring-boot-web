@@ -16,5 +16,6 @@ public class AuthenticationController {
     public UserResponseDto registerUser(@RequestBody UserRegistrationRequestDto requestBody) {
         return userService.register(requestBody);
     }
+
 }
 
