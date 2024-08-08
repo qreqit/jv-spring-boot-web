@@ -2,11 +2,15 @@ package mate.academy.springbootwebgreqit.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,5 +35,14 @@ public class Book {
     private String description;
     @Column(nullable = false, length = 255)
     private String coverImage;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "book_category",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    @ToStringExclude
+    @EqualsAndHashCode.Exclude
+    private Set<Category> categories = new HashSet<>();
     private boolean isDeleted = false;
 }
