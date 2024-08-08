@@ -1,21 +1,28 @@
 package mate.academy.springbootwebgreqit.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import mate.academy.springbootwebgreqit.dto.BookDtoWithoutCategotyIds;
 import mate.academy.springbootwebgreqit.dto.category.CategoryDto;
 import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
+import mate.academy.springbootwebgreqit.mapper.BookMapper;
 import mate.academy.springbootwebgreqit.mapper.CategoryMapper;
+import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.model.Category;
+import mate.academy.springbootwebgreqit.repository.BookRepository;
 import mate.academy.springbootwebgreqit.repository.CategoryRepository;
 import mate.academy.springbootwebgreqit.service.CategoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private  final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
     @Override
     public List<CategoryDto> findAll() {
@@ -48,5 +55,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteById(Long id) {
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public List<BookDtoWithoutCategotyIds> findBooksByCategoryId(Long categotyId) {
+        List<Book> books = bookRepository.findByCategoryId(categotyId);
+        return books.stream()
+                .map(bookMapper::toDtoWithoutCategories)
+                .collect(Collectors.toList());
     }
 }
