@@ -15,12 +15,12 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    private Key secret;
+    private final Key secret;
     @Value("${jwt.expiration}")
     private long expiration;
 
     public JwtUtil(@Value("${jwt.secret}") String secretString) {
-        secret = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
+        this.secret = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateToken(String username) {
