@@ -1,9 +1,11 @@
 package mate.academy.springbootwebgreqit.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDtoWithoutCategotyIds;
 import mate.academy.springbootwebgreqit.dto.category.CategoryDto;
 import mate.academy.springbootwebgreqit.service.CategoryService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,8 +16,9 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
-    public CategoryDto createCategory(CategoryDto categoryDto){
+    public CategoryDto createCategory(@Valid @RequestBody CategoryDto categoryDto){
         return categoryService.save(categoryDto);
     }
 
@@ -25,17 +28,19 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public CategoryDto getCategoryById(Long id){
+    public CategoryDto getCategoryById(@Valid @PathVariable Long id){
         return categoryService.getById(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public CategoryDto updateCategory(Long id, CategoryDto categoryDto){
+    public CategoryDto updateCategory(Long id, @RequestBody CategoryDto categoryDto){
         return categoryService.update(id, categoryDto);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    public void deleteCategory(Long id){
+    public void deleteCategory(@PathVariable Long id){
         categoryService.deleteById(id);
     }
 
