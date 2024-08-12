@@ -18,6 +18,7 @@ import java.util.List;
 public  class BookController {
     private final BookService bookService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public List<BookDto> getAll() {
         return bookService.findAll();

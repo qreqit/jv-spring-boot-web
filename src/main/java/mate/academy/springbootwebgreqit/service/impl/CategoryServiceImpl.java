@@ -3,6 +3,7 @@ package mate.academy.springbootwebgreqit.service.impl;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDtoWithoutCategotyIds;
 import mate.academy.springbootwebgreqit.dto.category.CategoryDto;
+import mate.academy.springbootwebgreqit.dto.category.UpdateCategoryRequestDto;
 import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.BookMapper;
 import mate.academy.springbootwebgreqit.mapper.CategoryMapper;
@@ -33,23 +34,24 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new  EntityNotFoundException("Can't find by id" + id));
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new  EntityNotFoundException("Can't find by id" + id));
         return categoryMapper.toDto(category);
     }
 
     @Override
     public CategoryDto save(CategoryDto categoryDto) {
         Category category = categoryMapper.toEntity(categoryDto);
-        Category savedCategory = categoryRepository.save(category);
-        return categoryMapper.toDto(savedCategory);
+        categoryRepository.save(category);
+        return categoryMapper.toDto(category);
     }
 
     @Override
-    public CategoryDto update(Long id, CategoryDto categoryDto) {
+    public CategoryDto update(Long id, UpdateCategoryRequestDto categoryDto) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find category by id" + id));
-        Category updatedCategory = categoryRepository.save(category);
-        return categoryMapper.toDto(updatedCategory);
+        categoryMapper.updateCategoryFromDto(categoryDto, category);
+        return categoryMapper.toDto(category);
     }
 
     @Override
@@ -58,10 +60,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<BookDtoWithoutCategotyIds> findBooksByCategoryId(Long categotyId) {
-        List<Book> books = bookRepository.findByCategoryId(categotyId);
+    public List<BookDtoWithoutCategotyIds> findBooksByCategoryId(Long categoryId) {
+        List<Book> books = bookRepository.findByCategoryId(categoryId);
         return books.stream()
                 .map(bookMapper::toDtoWithoutCategories)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

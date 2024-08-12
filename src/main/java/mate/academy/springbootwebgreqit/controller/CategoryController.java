@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDtoWithoutCategotyIds;
 import mate.academy.springbootwebgreqit.dto.category.CategoryDto;
+import mate.academy.springbootwebgreqit.dto.category.UpdateCategoryRequestDto;
 import mate.academy.springbootwebgreqit.service.CategoryService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class CategoryController {
         return categoryService.save(categoryDto);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public List<CategoryDto> getAll(){
         return categoryService.findAll();
@@ -34,7 +36,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public CategoryDto updateCategory(Long id, @RequestBody CategoryDto categoryDto){
+    public CategoryDto updateCategory(Long id, @RequestBody UpdateCategoryRequestDto categoryDto){
         return categoryService.update(id, categoryDto);
     }
 
@@ -44,7 +46,7 @@ public class CategoryController {
         categoryService.deleteById(id);
     }
 
-    @GetMapping
+    @GetMapping("/{id}/books")
     public List<BookDtoWithoutCategotyIds> getBooksByCategoryId(Long id){
         return categoryService.findBooksByCategoryId(id);
     }

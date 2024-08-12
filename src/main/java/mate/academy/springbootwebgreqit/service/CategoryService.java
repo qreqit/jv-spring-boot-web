@@ -2,6 +2,7 @@ package mate.academy.springbootwebgreqit.service;
 
 import mate.academy.springbootwebgreqit.dto.BookDtoWithoutCategotyIds;
 import mate.academy.springbootwebgreqit.dto.category.CategoryDto;
+import mate.academy.springbootwebgreqit.dto.category.UpdateCategoryRequestDto;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface CategoryService {
 
     CategoryDto save(CategoryDto categoryDto);
 
-    CategoryDto update(Long id, CategoryDto categoryDto);
+    CategoryDto update(Long id, UpdateCategoryRequestDto categoryDto);
 
     void deleteById(Long id);
 
