@@ -17,5 +17,5 @@ public interface CategoryService {
 
     void deleteById(Long id);
 
-    List<BookDtoWithoutCategotyIds> findBooksByCategoryId(Long categotyId);
+    List<BookDtoWithoutCategotyIds> findBooksByCategoryId(Long categoryId);
 }
