@@ -4,14 +4,11 @@ import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.user.UserRegistrationRequestDto;
 import mate.academy.springbootwebgreqit.dto.user.UserResponseDto;
 import mate.academy.springbootwebgreqit.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthenticationController {
     private final UserService userService;
 
@@ -20,3 +17,4 @@ public class AuthenticationController {
         return userService.register(requestBody);
     }
 }
+

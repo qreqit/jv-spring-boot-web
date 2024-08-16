@@ -8,8 +8,7 @@ import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
 import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
 import mate.academy.springbootwebgreqit.service.BookService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +31,7 @@ public  class BookController {
         return bookService.findById(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     @ApiOperation(value = "create a book")
     public BookDto createBook(@Valid @RequestBody CreateBookRequestDto requestDto) {
@@ -39,11 +39,12 @@ public  class BookController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "update a book")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public BookDto updateBook(@RequestBody UpdateBookRequestDto updateBookRequestDto) {
         return bookService.update(updateBookRequestDto);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     @ApiOperation(value = "delete a book")
     public void deleteBook(@PathVariable Long id) {
