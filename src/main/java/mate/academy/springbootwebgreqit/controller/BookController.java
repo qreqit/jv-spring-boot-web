@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/books")
 public  class BookController {
-    private BookService bookService;
+    private final BookService bookService;
 
     @GetMapping
     @ApiOperation(value = "get all books with pagination")
