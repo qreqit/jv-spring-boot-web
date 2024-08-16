@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 8
+      author: qreqit
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: shopping_cart_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: shopping_cart_id
+            constraintName: fk_users_shopping_cart
+            referencedTableName: shopping_carts
+            referencedColumnNames: id
