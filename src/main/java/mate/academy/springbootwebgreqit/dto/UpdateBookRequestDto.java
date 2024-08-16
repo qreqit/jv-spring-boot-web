@@ -15,5 +15,4 @@ public class UpdateBookRequestDto {
     private BigDecimal price;
     private String description;
     private String coverImage;
-
 }
