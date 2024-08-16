@@ -19,6 +19,7 @@ import java.util.List;
 public  class BookController {
     private final BookService bookService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     @ApiOperation(value = "get all books with pagination")
     public Page<BookDto> getAll(Pageable pageable) {
