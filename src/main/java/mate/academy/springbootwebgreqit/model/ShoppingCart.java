@@ -9,7 +9,7 @@ import org.mapstruct.Named;
 import java.util.Set;
 
 @Entity
-@Table(name = "shopping_Carts")
+@Table(name = "shopping_carts")
 @Getter
 @Setter
 public class ShoppingCart {
@@ -19,6 +19,6 @@ public class ShoppingCart {
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @OneToMany(mappedBy = "shoppingCart")
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems;
 }

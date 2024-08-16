@@ -13,6 +13,7 @@ import mate.academy.springbootwebgreqit.repository.CartItemRepository;
 import mate.academy.springbootwebgreqit.repository.ShoppingCartRepository;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,24 +33,23 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ShoppingCartDto addBookToShoppingCart(CartItemDto cartItemDto, User user) {
         ShoppingCart shoppingCart = user.getShoppingCart();
 
-        CartItem existingItem = shoppingCart.getCartItems().stream()
+        Optional<CartItem> existingItemOpt = shoppingCart.getCartItems().stream()
                 .filter(item -> item.getBook().equals(cartItemDto.getBook()))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
 
-        if (existingItem != null) {
-            existingItem.setQuantity(existingItem.getQuantity() + cartItemDto.getQuantity());
-        } else {
-            CartItem newCartItem = cartItemMapper.toModel(cartItemDto);
-            newCartItem.setShoppingCart(shoppingCart);
-            shoppingCart.getCartItems().add(newCartItem);
-        }
+        existingItemOpt.ifPresentOrElse(
+                existingItem -> existingItem.setQuantity(existingItem.getQuantity() + cartItemDto.getQuantity()),
+                () -> {
+                    CartItem newCartItem = cartItemMapper.toModel(cartItemDto);
+                    newCartItem.setShoppingCart(shoppingCart);
+                    shoppingCart.getCartItems().add(newCartItem);
+                }
+        );
 
         shoppingCartRepository.save(shoppingCart);
 
         return shoppingCartMapper.toDto(shoppingCart);
     }
-
 
     @Override
     public ShoppingCartDto updateCartItemQuantity(Long cartItemId, int quantity, User user) {
@@ -59,7 +59,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
 
-         shoppingCart = cartItem.getShoppingCart();
+        shoppingCart = cartItem.getShoppingCart();
         return shoppingCartMapper.toDto(shoppingCart);
     }
 
@@ -69,7 +69,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         CartItem cartItem = shoppingCart.getCartItems().stream()
                 .filter(item -> item.getId().equals(cartItemId))
                 .findFirst()
-                .orElseThrow(() -> new  EntityNotFoundException("CartItem with ID " + cartItemId + " not found"));
+                .orElseThrow(() ->new  EntityNotFoundException("CartItem with ID " + cartItemId + " not found"));
         shoppingCart.getCartItems().remove(cartItem);
         shoppingCartRepository.save(shoppingCart);
         return shoppingCartMapper.toDto(shoppingCart);
