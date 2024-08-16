@@ -1,6 +1,8 @@
 package mate.academy.springbootwebgreqit.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
@@ -24,6 +26,7 @@ public class Book {
     @Column(nullable = false, unique = true, length = 13)
     private String isbn;
     @Column(nullable = false, precision = 10, scale = 2)
+    @Min(0)
     private BigDecimal price;
     @Column(nullable = false, length = 2000)
     private String description;
