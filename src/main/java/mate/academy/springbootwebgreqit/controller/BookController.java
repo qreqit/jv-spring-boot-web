@@ -8,6 +8,8 @@ import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
 import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
 import mate.academy.springbootwebgreqit.service.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
