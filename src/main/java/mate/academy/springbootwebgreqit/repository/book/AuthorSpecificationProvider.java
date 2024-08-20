@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 @Component
 public class AuthorSpecificationProvider implements SpecificationProvider<Book> {
-    private static final String KEY = "title";
+    private static final String KEY = "author";
 
     @Override
     public String getKey() {

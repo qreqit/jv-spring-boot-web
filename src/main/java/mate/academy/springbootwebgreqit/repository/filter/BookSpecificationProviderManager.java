@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 @Component
 public class BookSpecificationProviderManager implements SpecificationProviderManager<Book> {
-    private List<SpecificationProvider<Book>> bookSpecificationProviders;
+    private final List<SpecificationProvider<Book>> bookSpecificationProviders;
 
     @Override
     public SpecificationProvider<Book> getSpecificationProvider(String key) {
