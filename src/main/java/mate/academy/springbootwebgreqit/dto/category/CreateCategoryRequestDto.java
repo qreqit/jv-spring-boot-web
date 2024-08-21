@@ -8,7 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateCategoryRequestDto {
-    @NotBlank
-    @Size(min = 2, max = 50)
     private String name;
 }
