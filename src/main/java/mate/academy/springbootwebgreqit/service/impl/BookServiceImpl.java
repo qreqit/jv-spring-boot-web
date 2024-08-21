@@ -21,9 +21,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
-    private BookRepository bookRepository;
-    private BookMapper bookMapper;
-    private BookSpecificationBuilder bookSpecificationBuilder;
+    private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
+    private final BookSpecificationBuilder bookSpecificationBuilder;
 
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
