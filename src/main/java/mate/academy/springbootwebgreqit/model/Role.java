@@ -1,10 +1,14 @@
 package mate.academy.springbootwebgreqit.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 @Table(name = "roles")
 @Entity
+@Getter
+@Setter
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +24,7 @@ public class Role implements GrantedAuthority {
     }
 
     public enum RoleName {
-        ROLE_USER,
-        ROLE_ADMIN
+        USER,
+        ADMIN
     }
 }

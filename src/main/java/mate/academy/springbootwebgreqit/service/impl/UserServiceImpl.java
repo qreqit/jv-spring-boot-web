@@ -6,6 +6,7 @@ import mate.academy.springbootwebgreqit.dto.user.UserResponseDto;
 import mate.academy.springbootwebgreqit.exception.RegistrationException;
 import mate.academy.springbootwebgreqit.mapper.UserMapper;
 import mate.academy.springbootwebgreqit.model.User;
+import mate.academy.springbootwebgreqit.repository.RoleRepository;
 import mate.academy.springbootwebgreqit.repository.UserRepository;
 import mate.academy.springbootwebgreqit.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;

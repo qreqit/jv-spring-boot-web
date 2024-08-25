@@ -17,13 +17,13 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public CategoryDto createCategory(@Valid @RequestBody CategoryDto categoryDto){
         return categoryService.save(categoryDto);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<CategoryDto> getAll(){
         return categoryService.findAll();
@@ -34,13 +34,13 @@ public class CategoryController {
         return categoryService.getById(id);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public CategoryDto updateCategory(Long id, @RequestBody UpdateCategoryRequestDto categoryDto){
         return categoryService.update(id, categoryDto);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteCategory(@PathVariable Long id){
         categoryService.deleteById(id);

@@ -21,7 +21,7 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     @ApiOperation(value = "get all books with pagination")
     public Page<BookDto> getAll(Pageable pageable) {
@@ -34,27 +34,27 @@ public class BookController {
         return bookService.findById(id);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @ApiOperation(value = "create a book")
     public BookDto createBook(@Valid @RequestBody CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public BookDto updateBook(@RequestBody UpdateBookRequestDto updateBookRequestDto) {
         return bookService.update(updateBookRequestDto);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ApiOperation(value = "delete a book")
     public void deleteBook(@PathVariable Long id) {
         bookService.deleteById(id);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/search")
     @ApiOperation(value = "delete a book")
     public Page<BookDto> searchBooks(BookSearchParameters searchParameters, Pageable pageable) {
