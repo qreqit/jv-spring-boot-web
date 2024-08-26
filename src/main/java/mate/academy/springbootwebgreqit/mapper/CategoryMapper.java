@@ -12,7 +12,11 @@ import org.mapstruct.MappingTarget;
 public interface CategoryMapper {
     CategoryDto toDto(Category category);
 
+<<<<<<< HEAD
     Category toEntity(CreateCategoryRequestDto requestDto);
+=======
+    Category toEntity(CategoryDto categoryDto);
+>>>>>>> bad5ce46860cb6aefcf2e0dfce281358a6c03250
 
     void updateCategoryFromDto(UpdateCategoryRequestDto categoryDto, @MappingTarget Category entity);
 }
