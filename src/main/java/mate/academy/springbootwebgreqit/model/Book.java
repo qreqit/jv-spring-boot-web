@@ -37,7 +37,7 @@ public class Book {
     private String description;
     @Column(nullable = false, length = 255)
     private String coverImage;
-    @Column(name = "category_id", nullable = false)
+    @Column(name = "category_id")
     private Long categoryId;
     @ManyToMany
     @JoinTable(
