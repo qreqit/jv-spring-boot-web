@@ -12,12 +12,14 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 @Component
 public class JwtUtil {
     private final Key secret;
     @Value("${jwt.expiration}")
     private long expiration;
+    private static final Logger logger = Logger.getLogger(JwtUtil.class.getName());
 
     public JwtUtil(@Value("${jwt.secret}") String secretString) {
         this.secret = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
@@ -32,16 +34,23 @@ public class JwtUtil {
                 .compact();
     }
 
-
     public boolean isValidToken(String token) {
         try {
-            Jws<Claims> claimsJwts  = Jwts.parserBuilder()
+            Jws<Claims> claimsJwts = Jwts.parserBuilder()
                     .setSigningKey(secret)
                     .build()
                     .parseClaimsJws(token);
-            return !claimsJwts.getBody().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtException("Expired or invalid jwt token");
+            boolean isExpired = claimsJwts.getBody().getExpiration().before(new Date());
+            if (isExpired) {
+                logger.warning("Token is expired");
+            }
+            return !isExpired;
+        } catch (JwtException e) {
+            logger.severe("Invalid JWT token: " + e.getMessage());
+            return false;
+        } catch (IllegalArgumentException e) {
+            logger.severe("Token is null or empty: " + e.getMessage());
+            return false;
         }
     }
 
@@ -50,7 +59,7 @@ public class JwtUtil {
     }
 
     private <T> T getClaimsFromToken(String token, Function<Claims, T> claimsResolver) {
-        final  Claims claims = Jwts.parserBuilder()
+        final Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secret)
                 .build()
                 .parseClaimsJws(token)

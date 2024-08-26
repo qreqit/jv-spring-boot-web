@@ -3,6 +3,7 @@ package mate.academy.springbootwebgreqit.service.impl;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDtoWithoutCategotyIds;
 import mate.academy.springbootwebgreqit.dto.category.CategoryDto;
+import mate.academy.springbootwebgreqit.dto.category.CreateCategoryRequestDto;
 import mate.academy.springbootwebgreqit.dto.category.UpdateCategoryRequestDto;
 import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.BookMapper;
@@ -40,10 +41,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto save(CategoryDto categoryDto) {
+    public CategoryDto save(CreateCategoryRequestDto categoryDto) {
         Category category = categoryMapper.toEntity(categoryDto);
-        categoryRepository.save(category);
-        return categoryMapper.toDto(category);
+        Category savedCategory = categoryRepository.save(category);
+        return categoryMapper.toDto(savedCategory);
     }
 
     @Override

@@ -1,12 +1,12 @@
 package mate.academy.springbootwebgreqit.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+@Data
 public class CreateBookRequestDto {
     private String title;
     private String author;
@@ -14,4 +14,5 @@ public class CreateBookRequestDto {
     private BigDecimal price;
     private String description;
     private String coverImage;
+    private Long categoryId;
 }
