@@ -6,6 +6,8 @@ import lombok.Data;
 import mate.academy.springbootwebgreqit.validation.FieldMatch;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.Set;
+
 @Data
 @FieldMatch(first = "password", second = "repeatPassword", message = "Passwords do not match")
 public class UserRegistrationRequestDto {
@@ -23,4 +25,5 @@ public class UserRegistrationRequestDto {
     @NotBlank
     private String lastName;
     private String shippingAddress;
+    private Set<String> roles;
 }

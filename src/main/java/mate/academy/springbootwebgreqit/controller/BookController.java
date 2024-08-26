@@ -41,8 +41,8 @@ public class BookController {
         return bookService.save(requestDto);
     }
 
-    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
     public BookDto updateBook(@RequestBody UpdateBookRequestDto updateBookRequestDto) {
         return bookService.update(updateBookRequestDto);
     }
@@ -54,6 +54,7 @@ public class BookController {
         bookService.deleteById(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/search")
     @ApiOperation(value = "delete a book")
     public Page<BookDto> searchBooks(BookSearchParameters searchParameters, Pageable pageable) {
