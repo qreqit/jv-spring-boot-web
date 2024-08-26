@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-    private  final BookRepository bookRepository;
+    private final BookRepository bookRepository;
     private final BookMapper bookMapper;
 
     @Override
