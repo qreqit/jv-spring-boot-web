@@ -34,7 +34,6 @@ public class BookController {
         return bookService.findById(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @ApiOperation(value = "create a book")
     public BookDto createBook(@Valid @RequestBody CreateBookRequestDto requestDto) {
@@ -54,6 +53,7 @@ public class BookController {
         bookService.deleteById(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/search")
     @ApiOperation(value = "delete a book")
     public Page<BookDto> searchBooks(BookSearchParameters searchParameters, Pageable pageable) {
