@@ -37,8 +37,8 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public CategoryDto updateCategory(Long id, @RequestBody UpdateCategoryRequestDto categoryDto){
-        return categoryService.update(id, categoryDto);
+    public CategoryDto updateCategory(@RequestBody UpdateCategoryRequestDto categoryDto){
+        return categoryService.update(categoryDto);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
