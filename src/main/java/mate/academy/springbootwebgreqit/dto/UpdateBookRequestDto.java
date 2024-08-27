@@ -1,12 +1,12 @@
 package mate.academy.springbootwebgreqit.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+@Data
 public class UpdateBookRequestDto {
     private Long id;
     private String title;

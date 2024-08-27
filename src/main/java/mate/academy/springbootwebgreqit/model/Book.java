@@ -37,8 +37,6 @@ public class Book {
     private String description;
     @Column(nullable = false, length = 255)
     private String coverImage;
-    @Column(name = "category_id")
-    private Long categoryId;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "books_categories",

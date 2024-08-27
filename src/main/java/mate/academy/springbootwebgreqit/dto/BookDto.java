@@ -1,12 +1,12 @@
 package mate.academy.springbootwebgreqit.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.*;
 
-@Getter
-@Setter
+@Data
 public class BookDto {
     private Long id;
     private String title;
@@ -15,5 +15,5 @@ public class BookDto {
     private BigDecimal price;
     private String description;
     private String coverImage;
-    private Set<Long> categoriesIds = new HashSet<>();
+    private Set<Long> categoriesIds;
 }

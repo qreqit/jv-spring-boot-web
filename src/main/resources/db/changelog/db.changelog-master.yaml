@@ -3,5 +3,3 @@ databaseChangeLog:
   - include:/db/chandelog/changes/02-add-change-role.yaml
   - include:/db/chandelog/changes/03-create-table-categories.yaml
   - include:/db/chandelog/changes/04-add-table-book-categories.yaml
-  - include:/db/chandelog/changes/05-add-table-category-id.yaml
-
