@@ -1,9 +1,13 @@
 package mate.academy.springbootwebgreqit.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,5 +18,6 @@ public class CreateBookRequestDto {
     private BigDecimal price;
     private String description;
     private String coverImage;
-    private Long categoryId;
+
+    private Set<Long> categoriesIds = new HashSet<>();
 }

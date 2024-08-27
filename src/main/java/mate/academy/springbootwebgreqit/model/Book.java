@@ -39,7 +39,7 @@ public class Book {
     private String coverImage;
     @Column(name = "category_id")
     private Long categoryId;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "books_categories",
             joinColumns = @JoinColumn(name = "book_id"),

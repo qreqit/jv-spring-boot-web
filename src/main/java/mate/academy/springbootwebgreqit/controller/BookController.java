@@ -55,7 +55,7 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    @ApiOperation(value = "delete a book")
+    @ApiOperation(value = "search a book")
     public Page<BookDto> searchBooks(BookSearchParameters searchParameters, Pageable pageable) {
         return bookService.search(searchParameters, pageable);
     }
