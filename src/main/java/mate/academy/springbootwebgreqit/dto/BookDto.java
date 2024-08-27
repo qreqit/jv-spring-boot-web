@@ -1,5 +1,6 @@
 package mate.academy.springbootwebgreqit.dto;
 
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,5 +16,5 @@ public class BookDto {
     private BigDecimal price;
     private String description;
     private String coverImage;
-    private Set<Long> categoriesIds;
+    private List<@Positive Long> categoriesIds;
 }
