@@ -8,8 +8,6 @@ import mate.academy.springbootwebgreqit.model.ShoppingCart;
 
 @Data
 public class CartItemDto {
-    private Long id;
-    private ShoppingCart shoppingCart;
-    private Book book;
+    private Long bookId;
     private int quantity;
 }

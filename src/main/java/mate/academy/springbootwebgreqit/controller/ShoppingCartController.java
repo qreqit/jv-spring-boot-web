@@ -5,6 +5,7 @@ import mate.academy.springbootwebgreqit.dto.cartItem.CartItemDto;
 import mate.academy.springbootwebgreqit.dto.shoppingCart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.model.User;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,22 +15,22 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
     @GetMapping
-    public ShoppingCartDto getShoppingCartForCurrentUser(User user) {
+    public ShoppingCartDto getShoppingCartForCurrentUser(@AuthenticationPrincipal User user) {
         return shoppingCartService.getShoppingCartForCurrentUser(user);
     }
 
     @PostMapping
-    public ShoppingCartDto addBookToShoppingCart(CartItemDto cartItem, User user) {
+    public ShoppingCartDto addBookToShoppingCart(@RequestBody CartItemDto cartItem, @AuthenticationPrincipal User user) {
     return shoppingCartService.addBookToShoppingCart(cartItem, user);
     }
 
     @PutMapping("/items/{cartItemId}")
-    public ShoppingCartDto updateCartItemQuantity(Long cartItemId, int quantity, User user) {
+    public ShoppingCartDto updateCartItemQuantity(@PathVariable Long cartItemId, @RequestParam int quantity,@AuthenticationPrincipal User user) {
         return shoppingCartService.updateCartItemQuantity(cartItemId, quantity, user);
     }
 
     @DeleteMapping("/items/{cartItemId}")
-    public void removeCartItem(Long cartItemId, User user) {
+    public void removeCartItem(@PathVariable Long cartItemId,@AuthenticationPrincipal User user) {
         shoppingCartService.removeCartItem(cartItemId, user);
     }
 }

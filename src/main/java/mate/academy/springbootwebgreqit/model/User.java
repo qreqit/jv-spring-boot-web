@@ -35,12 +35,11 @@ public class User implements UserDetails {
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 
-    @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "shopping_card_id")
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Long shoppingCartid;
+    private ShoppingCart shoppingCart;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),

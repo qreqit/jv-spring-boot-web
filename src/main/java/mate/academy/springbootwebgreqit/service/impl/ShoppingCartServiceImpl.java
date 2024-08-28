@@ -34,7 +34,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart shoppingCart = user.getShoppingCart();
 
         Optional<CartItem> existingItemOpt = shoppingCart.getCartItems().stream()
-                .filter(item -> item.getBook().equals(cartItemDto.getBook()))
+                .filter(item -> item.getBook().getId().equals(cartItemDto.getBookId()))
                 .findFirst();
 
         existingItemOpt.ifPresentOrElse(
@@ -46,9 +46,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 }
         );
 
-        shoppingCartRepository.save(shoppingCart);
+        ShoppingCart savedshoppingCart = shoppingCartRepository.save(shoppingCart);
 
-        return shoppingCartMapper.toDto(shoppingCart);
+        return shoppingCartMapper.toDto(savedshoppingCart);
     }
 
     @Override
@@ -58,8 +58,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .orElseThrow(() -> new EntityNotFoundException("Can't update cart item by quantity"));
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
-
-        shoppingCart = cartItem.getShoppingCart();
         return shoppingCartMapper.toDto(shoppingCart);
     }
 
@@ -71,7 +69,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .findFirst()
                 .orElseThrow(() ->new  EntityNotFoundException("CartItem with ID " + cartItemId + " not found"));
         shoppingCart.getCartItems().remove(cartItem);
-        shoppingCartRepository.save(shoppingCart);
-        return shoppingCartMapper.toDto(shoppingCart);
+        ShoppingCart savedshoppingCart = shoppingCartRepository.save(shoppingCart);
+
+        return shoppingCartMapper.toDto(savedshoppingCart);
     }
 }
