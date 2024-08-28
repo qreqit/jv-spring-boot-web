@@ -2,8 +2,7 @@ package mate.academy.springbootwebgreqit.dto;
 
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.util.*;
 

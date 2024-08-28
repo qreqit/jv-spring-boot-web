@@ -9,5 +9,4 @@ public class SpringBootWebGreqitApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringBootWebGreqitApplication.class, args);
     }
-
 }

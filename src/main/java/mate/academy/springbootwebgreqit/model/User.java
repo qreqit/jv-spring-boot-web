@@ -36,6 +36,11 @@ public class User implements UserDetails {
     private boolean isDeleted = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shopping_card_id")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Long shoppingCartid;
+
+    @ManyToMany
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),

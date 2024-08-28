@@ -9,7 +9,6 @@ import mate.academy.springbootwebgreqit.model.Book;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
-
 import java.util.stream.Collectors;
 
 @Mapper(config = MapperConfig.class)
@@ -18,7 +17,7 @@ public interface BookMapper {
 
     void updateBookFromDto(UpdateBookRequestDto book, @MappingTarget Book entity);
 
-    Book toModel (CreateBookRequestDto requestDto);
+    Book toModel(CreateBookRequestDto requestDto);
 
     BookDtoWithoutCategotyIds toDtoWithoutCategories(Book book);
 

@@ -1,10 +1,9 @@
 package mate.academy.springbootwebgreqit.repository;
 
-import mate.academy.springbootwebgreqit.model.Category;
+import mate.academy.springbootwebgreqit.model.CartItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 }
