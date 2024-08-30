@@ -1,5 +1,6 @@
 package mate.academy.springbootwebgreqit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
@@ -19,7 +20,9 @@ public class ShoppingCart {
     private Long id;
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<CartItem> cartItems = new HashSet<>();
 }

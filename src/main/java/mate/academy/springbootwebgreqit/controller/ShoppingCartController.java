@@ -2,6 +2,7 @@ package mate.academy.springbootwebgreqit.controller;
 
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.cartItem.CartItemDto;
+import mate.academy.springbootwebgreqit.dto.cartItem.CartItemRequestDto;
 import mate.academy.springbootwebgreqit.dto.shoppingCart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.model.User;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
@@ -20,8 +21,8 @@ public class ShoppingCartController {
     }
 
     @PostMapping
-    public ShoppingCartDto addBookToShoppingCart(@RequestBody CartItemDto cartItem, @AuthenticationPrincipal User user) {
-    return shoppingCartService.addBookToShoppingCart(cartItem, user);
+    public ShoppingCartDto addBookToShoppingCart(@RequestBody CartItemRequestDto cartItem) {
+    return shoppingCartService.addBookToShoppingCart(cartItem);
     }
 
     @PutMapping("/items/{cartItemId}")

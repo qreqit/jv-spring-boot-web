@@ -2,6 +2,7 @@ package mate.academy.springbootwebgreqit.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.cartItem.CartItemDto;
+import mate.academy.springbootwebgreqit.dto.cartItem.CartItemRequestDto;
 import mate.academy.springbootwebgreqit.dto.shoppingCart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.CartItemMapper;
@@ -9,6 +10,7 @@ import mate.academy.springbootwebgreqit.mapper.ShoppingCartMapper;
 import mate.academy.springbootwebgreqit.model.CartItem;
 import mate.academy.springbootwebgreqit.model.ShoppingCart;
 import mate.academy.springbootwebgreqit.model.User;
+import mate.academy.springbootwebgreqit.repository.BookRepository;
 import mate.academy.springbootwebgreqit.repository.CartItemRepository;
 import mate.academy.springbootwebgreqit.repository.ShoppingCartRepository;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
@@ -22,6 +24,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartMapper shoppingCartMapper;
     private final CartItemMapper cartItemMapper;
+    private final BookRepository bookRepository;
 
     @Override
     public ShoppingCartDto getShoppingCartForCurrentUser(User user) {
@@ -30,8 +33,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto addBookToShoppingCart(CartItemDto cartItemDto, User user) {
-        ShoppingCart shoppingCart = user.getShoppingCart();
+    public ShoppingCartDto addBookToShoppingCart(CartItemRequestDto cartItemDto) {
+        ShoppingCart shoppingCart = shoppingCartRepository.findById(cartItemDto.getShoppingCartId())
+                .orElseThrow(() -> new IllegalArgumentException("Shopping csrt not found"));
 
         Optional<CartItem> existingItemOpt = shoppingCart.getCartItems().stream()
                 .filter(item -> item.getBook().getId().equals(cartItemDto.getBookId()))
@@ -40,7 +44,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         existingItemOpt.ifPresentOrElse(
                 existingItem -> existingItem.setQuantity(existingItem.getQuantity() + cartItemDto.getQuantity()),
                 () -> {
+                    if (cartItemDto.getBookId() == null) {
+                        throw new IllegalArgumentException("Book ID cannot be null");
+                    }
                     CartItem newCartItem = cartItemMapper.toModel(cartItemDto);
+                    newCartItem.setShoppingCart(shoppingCart);
+                    newCartItem.setBook(bookRepository.findById(cartItemDto.getBookId())
+                            .orElseThrow(() -> new IllegalArgumentException("Book not found")));
+                    newCartItem.setQuantity(cartItemDto.getQuantity());
                     newCartItem.setShoppingCart(shoppingCart);
                     shoppingCart.getCartItems().add(newCartItem);
                 }
@@ -51,14 +62,23 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartMapper.toDto(savedshoppingCart);
     }
 
-    @Override
+        @Override
     public ShoppingCartDto updateCartItemQuantity(Long cartItemId, int quantity, User user) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be a positive integer");
+        }
+
         ShoppingCart shoppingCart = user.getShoppingCart();
-        CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new EntityNotFoundException("Can't update cart item by quantity"));
+        CartItem cartItem = shoppingCart.getCartItems().stream()
+                .filter(item -> item.getId().equals(cartItemId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("CartItem with ID " + cartItemId + " not found in the user's shopping cart"));
+
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
-        return shoppingCartMapper.toDto(shoppingCart);
+        ShoppingCart savedShoppingCart = shoppingCartRepository.save(shoppingCart);
+
+        return shoppingCartMapper.toDto(savedShoppingCart);
     }
 
     @Override
