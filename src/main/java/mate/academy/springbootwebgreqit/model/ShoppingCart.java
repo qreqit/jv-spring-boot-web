@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.mapstruct.Named;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -19,6 +20,6 @@ public class ShoppingCart {
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CartItem> cartItems;
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<CartItem> cartItems = new HashSet<>();
 }

@@ -25,13 +25,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             WebRequest request
     ) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestap", LocalDateTime.now());
-        body.put("status", HttpStatus.BAD_REQUEST);
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
         List<String> errors = ex.getBindingResult().getAllErrors().stream()
                 .map(this::getErrorMessage)
                 .toList();
         body.put("errors", errors);
-        return new ResponseEntity<>(body, headers, status);
+        return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
     }
 
     private String getErrorMessage(ObjectError objectError) {
@@ -48,4 +48,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        body.put("error", "Internal Server Error");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false));
+        return new ResponseEntity<>(body, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

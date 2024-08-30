@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: 5
       author: qreqit
       changes:
         - createTable:
-            tableName: categories
+            tableName: roles
             columns:
               - column:
                   name: id
@@ -15,9 +15,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: name
-                  type: varchar(255)
+                  type: varchar(50)
                   constraints:
                     nullable: false
-              - column:
-                  name: description
-                  type: varchar(255)
+                    unique: true
