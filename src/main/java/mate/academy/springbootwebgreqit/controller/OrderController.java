@@ -18,7 +18,7 @@ public class OrderController {
 
     @PostMapping
     public OrderResponseDto addOrder(@RequestBody OrderRequestDto requestDto, @AuthenticationPrincipal User user) {
-        return orderService.AddOrder(requestDto, user);
+        return orderService.addOrder(requestDto, user);
     }
 
     @GetMapping
@@ -28,16 +28,16 @@ public class OrderController {
 
     @PatchMapping("/{id}")
     public OrderResponseDto updateOrderStatus(@PathVariable Long id, @RequestBody OrderRequestDto requestDto) {
-        return orderService.UpdateOrderStatus(id, requestDto);
+        return orderService.updateOrderStatus(id, requestDto);
     }
 
     @GetMapping("{orderId}/items")
     public List<OrderItemResponseDto> getAllItemsFromOrder(@PathVariable Long orderId) {
-        return orderService.GetAllItemsFromOrder(orderId);
+        return orderService.getAllItemsFromOrder(orderId);
     }
 
     @GetMapping("{orderId}/items/{itemId}")
     public OrderItemResponseDto getItemFromOrderById(@PathVariable Long orderId, @PathVariable Long itemId) {
-        return orderService.GetItemFromOrderById(orderId, itemId);
+        return orderService.getItemFromOrderById(orderId, itemId);
     }
 }

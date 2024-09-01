@@ -1,5 +1,6 @@
 package mate.academy.springbootwebgreqit.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.cartItem.CartItemDto;
 import mate.academy.springbootwebgreqit.dto.cartItem.CartItemRequestDto;
@@ -26,12 +27,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemMapper cartItemMapper;
     private final BookRepository bookRepository;
 
+    @Transactional
     @Override
     public ShoppingCartDto getShoppingCartForCurrentUser(User user) {
         ShoppingCart shoppingCart = user.getShoppingCart();
         return shoppingCartMapper.toDto(shoppingCart);
     }
 
+    @Transactional
     @Override
     public ShoppingCartDto addBookToShoppingCart(CartItemRequestDto cartItemDto) {
         ShoppingCart shoppingCart = shoppingCartRepository.findById(cartItemDto.getShoppingCartId())

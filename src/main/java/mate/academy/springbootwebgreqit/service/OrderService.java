@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Set;
 
 public interface OrderService {
-    OrderResponseDto AddOrder(OrderRequestDto requestDto, User user);
+    OrderResponseDto addOrder(OrderRequestDto requestDto, User user);
 
     List<OrderResponseDto> getAllOrders(User user);
 
-    OrderResponseDto UpdateOrderStatus(Long id, OrderRequestDto requestDto);
+    OrderResponseDto updateOrderStatus(Long id, OrderRequestDto requestDto);
 
-    List<OrderItemResponseDto> GetAllItemsFromOrder(Long orderId);
+    List<OrderItemResponseDto> getAllItemsFromOrder(Long orderId);
 
-    OrderItemResponseDto GetItemFromOrderById(Long orderId, Long itemId);
+    OrderItemResponseDto getItemFromOrderById(Long orderId, Long itemId);
 }

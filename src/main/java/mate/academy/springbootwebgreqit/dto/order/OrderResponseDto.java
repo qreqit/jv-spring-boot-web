@@ -1,5 +1,6 @@
 package mate.academy.springbootwebgreqit.dto.order;
 
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import mate.academy.springbootwebgreqit.model.Order;
 
@@ -14,5 +15,5 @@ public class OrderResponseDto {
     private Order.Status status;
     private BigDecimal total;
     private LocalDateTime orderDate;
-    private List<Long> orderItems;
+    private Set<@Positive Long> orderItems;
 }

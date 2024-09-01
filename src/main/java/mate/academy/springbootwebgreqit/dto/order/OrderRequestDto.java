@@ -6,7 +6,6 @@ import lombok.Data;
 import mate.academy.springbootwebgreqit.model.Order;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -18,5 +17,5 @@ public class OrderRequestDto {
     @NotNull
     private BigDecimal total;
     @NotNull
-    private List<@Positive Long> orderItems;
+    private Set<@Positive Long> orderItems;
 }
