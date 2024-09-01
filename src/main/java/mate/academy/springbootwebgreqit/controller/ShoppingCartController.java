@@ -1,7 +1,6 @@
 package mate.academy.springbootwebgreqit.controller;
 
 import lombok.RequiredArgsConstructor;
-import mate.academy.springbootwebgreqit.dto.cartItem.CartItemDto;
 import mate.academy.springbootwebgreqit.dto.cartItem.CartItemRequestDto;
 import mate.academy.springbootwebgreqit.dto.shoppingCart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.model.User;
