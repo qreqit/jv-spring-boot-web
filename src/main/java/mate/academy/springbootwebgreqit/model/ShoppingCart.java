@@ -22,7 +22,7 @@ public class ShoppingCart {
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
-    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<CartItem> cartItems = new HashSet<>();
 }
