@@ -43,7 +43,7 @@ public class Book {
     @Column(nullable = false, length = 255)
     private String coverImage;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
         name = "books_categories",
         joinColumns = @JoinColumn(name = "book_id"),
@@ -55,6 +55,6 @@ public class Book {
 
     private boolean isDeleted = false;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<OrderItem> orderItems;
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private Set<OrderItem> orderItems = new HashSet<>();
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.order.OrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
 import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
+import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.OrderItemMapper;
 import mate.academy.springbootwebgreqit.mapper.OrderMapper;
 import mate.academy.springbootwebgreqit.model.Order;
@@ -37,14 +38,14 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderResponseDto> getAllOrders(User user) {
         return orderRepository.findByUser(user).stream()
                 .map(orderMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public OrderResponseDto updateOrderStatus(Long id, OrderRequestDto requestDto) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Order not found"));
         order.setStatus(requestDto.getStatus());
-        order = orderRepository.save(order);
+        orderRepository.save(order);
         return orderMapper.toDto(order);
     }
 

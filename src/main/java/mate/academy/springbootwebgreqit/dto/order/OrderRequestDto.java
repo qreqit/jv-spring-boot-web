@@ -1,7 +1,9 @@
 package mate.academy.springbootwebgreqit.dto.order;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import mate.academy.springbootwebgreqit.model.Order;
 
@@ -18,4 +20,7 @@ public class OrderRequestDto {
     private BigDecimal total;
     @NotNull
     private Set<@Positive Long> orderItems;
+    @NotBlank
+    @Size(max = 40)
+    private String shippingAdress;
 }

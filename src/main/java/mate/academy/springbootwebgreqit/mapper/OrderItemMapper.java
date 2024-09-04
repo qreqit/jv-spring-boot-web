@@ -9,5 +9,5 @@ import org.mapstruct.Mapper;
 public interface OrderItemMapper {
     OrderItemResponseDto toDto(OrderItem orderItem);
 
-    OrderItem toModel(OrderItemDto orderDto);
+    OrderItem toModel(OrderItemResponseDto orderDto);
 }

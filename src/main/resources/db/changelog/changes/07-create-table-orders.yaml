@@ -20,17 +20,17 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: status
-                  type: varchar(20)  # Enum typically stored as String
+                  type: varchar(20)
                   constraints:
                     nullable: false
               - column:
                   name: total
-                  type: decimal(19, 2)  # BigDecimal typically mapped to decimal
+                  type: decimal(19, 2)
                   constraints:
                     nullable: false
               - column:
                   name: order_date
-                  type: timestamp  # LocalDateTime typically stored as timestamp
+                  type: timestamp
                   constraints:
                     nullable: false
 

@@ -2,6 +2,8 @@ package mate.academy.springbootwebgreqit.dto.order;
 
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemDto;
+import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
 import mate.academy.springbootwebgreqit.model.Order;
 
 import java.math.BigDecimal;
@@ -12,8 +14,9 @@ import java.util.Set;
 @Data
 public class OrderResponseDto {
     private Long id;
-    private Order.Status status;
+    private Long userId;
+    private List<OrderItemResponseDto> orderItems;
+    private String orderDate;
     private BigDecimal total;
-    private LocalDateTime orderDate;
-    private Set<@Positive Long> orderItems;
+    private String status;
 }

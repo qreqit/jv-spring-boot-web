@@ -15,7 +15,7 @@ public interface OrderMapper {
 
     OrderResponseDto toDto(Order order);
 
-    default Set<OrderItem> map(Set<Long> orderItemIds) {
+    default Set<OrderItem> mapOrderItemIds(Set<Long> orderItemIds) {
         if (orderItemIds == null) {
             return null;
         }
@@ -28,7 +28,7 @@ public interface OrderMapper {
                 .collect(Collectors.toSet());
     }
 
-    default Set<Long> map1(Set<OrderItem> orderItems) {
+    default Set<Long> mapOrderItem(Set<OrderItem> orderItems) {
         if (orderItems == null) {
             return null;
         }
