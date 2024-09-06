@@ -1,6 +1,7 @@
 package mate.academy.springbootwebgreqit.service.impl;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDto;
 import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
@@ -32,10 +33,12 @@ public class BookServiceImpl implements BookService {
     private final CategoryRepository categoryRepository;
 
     @Override
+    @Transactional
     public BookDto save(CreateBookRequestDto requestDto) {
         Book book = bookMapper.toModel(requestDto);
         book.setCategories(categoriesIdToCategories(requestDto.getCategoriesIds()));
         Book savedBook = bookRepository.save(book);
+
         return bookMapper.toDto(savedBook);
     }
 

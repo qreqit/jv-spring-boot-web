@@ -1,5 +1,6 @@
 package mate.academy.springbootwebgreqit.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDtoWithoutCategotyIds;
 import mate.academy.springbootwebgreqit.dto.category.CategoryDto;
@@ -40,6 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toDto(category);
     }
 
+    @Transactional
     @Override
     public CategoryDto save(CreateCategoryRequestDto categoryDto) {
         Category category = categoryMapper.toEntity(categoryDto);

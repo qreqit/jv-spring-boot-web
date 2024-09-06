@@ -36,7 +36,7 @@ public class User implements UserDetails {
     private boolean isDeleted = false;
 
     @JoinColumn(name = "shopping_card_id")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ShoppingCart shoppingCart;
 
     @ManyToMany
