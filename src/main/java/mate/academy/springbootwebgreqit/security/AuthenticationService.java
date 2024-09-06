@@ -21,13 +21,9 @@ import java.util.Optional;
 public class AuthenticationService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
 
     @Transactional
     public UserLoginResponseDto authenticate(UserLoginRequestDto request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                        .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Hibernate.initialize(user.getRoles());
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
