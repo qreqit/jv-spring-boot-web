@@ -2,7 +2,6 @@ package mate.academy.springbootwebgreqit.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import mate.academy.springbootwebgreqit.dto.cartItem.CartItemDto;
 import mate.academy.springbootwebgreqit.dto.cartItem.CartItemRequestDto;
 import mate.academy.springbootwebgreqit.dto.shoppingCart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
@@ -14,7 +13,9 @@ import mate.academy.springbootwebgreqit.model.User;
 import mate.academy.springbootwebgreqit.repository.BookRepository;
 import mate.academy.springbootwebgreqit.repository.CartItemRepository;
 import mate.academy.springbootwebgreqit.repository.ShoppingCartRepository;
+import mate.academy.springbootwebgreqit.repository.UserRepository;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartMapper shoppingCartMapper;
     private final CartItemMapper cartItemMapper;
     private final BookRepository bookRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     @Override
@@ -54,6 +56,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     newCartItem.setShoppingCart(shoppingCart);
                     newCartItem.setBook(bookRepository.findById(cartItemDto.getBookId())
                             .orElseThrow(() -> new IllegalArgumentException("Book not found")));
+                    Hibernate.initialize(shoppingCart.getUser());
+                    Hibernate.initialize(shoppingCart.getUser().getRoles());
                     newCartItem.setQuantity(cartItemDto.getQuantity());
                     newCartItem.setShoppingCart(shoppingCart);
                     shoppingCart.getCartItems().add(newCartItem);

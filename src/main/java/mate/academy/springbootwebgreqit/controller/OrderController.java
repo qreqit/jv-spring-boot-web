@@ -31,7 +31,7 @@ public class OrderController {
         return orderService.getAllOrders(user);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     @ApiOperation("Update order status by id")
     public OrderResponseDto updateOrderStatus(@PathVariable Long id, @RequestBody @Valid OrderRequestDto requestDto) {
