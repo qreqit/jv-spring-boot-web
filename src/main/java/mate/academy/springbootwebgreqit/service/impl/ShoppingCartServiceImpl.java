@@ -17,6 +17,7 @@ import mate.academy.springbootwebgreqit.repository.UserRepository;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Service
@@ -27,12 +28,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartMapper shoppingCartMapper;
     private final CartItemMapper cartItemMapper;
     private final BookRepository bookRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     @Override
     public ShoppingCartDto getShoppingCartForCurrentUser(User user) {
         ShoppingCart shoppingCart = user.getShoppingCart();
+        Hibernate.initialize(shoppingCart.getCartItems());
+        shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook().getCategories()));
         return shoppingCartMapper.toDto(shoppingCart);
     }
 
@@ -65,10 +67,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         );
 
         ShoppingCart savedshoppingCart = shoppingCartRepository.save(shoppingCart);
+        Hibernate.initialize(savedshoppingCart.getCartItems());
+        savedshoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook().getCategories()));
+        savedshoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook().getOrderItems()));
 
         return shoppingCartMapper.toDto(savedshoppingCart);
     }
 
+    @Transactional
         @Override
     public ShoppingCartDto updateCartItemQuantity(Long cartItemId, int quantity, User user) {
         if (quantity <= 0) {
@@ -88,6 +94,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartMapper.toDto(savedShoppingCart);
     }
 
+    @Transactional
     @Override
     public ShoppingCartDto removeCartItem(Long cartItemId, User user) {
         ShoppingCart shoppingCart = user.getShoppingCart();

@@ -15,6 +15,7 @@ import mate.academy.springbootwebgreqit.repository.BookRepository;
 import mate.academy.springbootwebgreqit.repository.CategoryRepository;
 import mate.academy.springbootwebgreqit.repository.filter.BookSpecificationBuilder;
 import mate.academy.springbootwebgreqit.service.BookService;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -43,14 +44,19 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public Page<BookDto> findAll(Pageable pageable) {
         Page<Book> bookPage = bookRepository.findAll(pageable);
+        bookPage.forEach(book -> Hibernate.initialize(book.getCategories()));
         return bookPage.map(bookMapper::toDto);
     }
 
     @Override
+    @Transactional
     public BookDto findById(Long id) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Can't find book by id:" + id));
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find book by id:" + id));
+        Hibernate.initialize(book.getCategories());
         return bookMapper.toDto(book);
     }
 
@@ -69,9 +75,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public Page<BookDto> search(BookSearchParameters params, Pageable pageable) {
         Specification<Book> bookSpecification = bookSpecificationBuilder.build(params);
         Page<Book> bookPage = bookRepository.findAll(bookSpecification, pageable);
+        bookPage.forEach(book -> Hibernate.initialize(book.getCategories()));
         return  bookPage.map(bookMapper::toDto);
     }
 
