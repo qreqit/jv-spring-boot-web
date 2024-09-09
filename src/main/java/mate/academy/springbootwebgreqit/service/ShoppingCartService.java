@@ -7,11 +7,11 @@ import mate.academy.springbootwebgreqit.model.CartItem;
 import mate.academy.springbootwebgreqit.model.User;
 
 public interface ShoppingCartService {
-    ShoppingCartDto getShoppingCartForCurrentUser(User user);
+    ShoppingCartDto getShoppingCartForCurrentUser(Long userId);
 
     ShoppingCartDto addBookToShoppingCart(CartItemRequestDto cartItem);
 
-    ShoppingCartDto updateCartItemQuantity(Long cartItemId, int quantity, User user);
+    ShoppingCartDto updateCartItemQuantity(Long cartItemId, int quantity, Long userId);
 
-    ShoppingCartDto removeCartItem(Long cartItemId, User user);
+    ShoppingCartDto removeCartItem(Long cartItemId, Long userId);
 }

@@ -15,8 +15,8 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
     @GetMapping
-    public ShoppingCartDto getShoppingCartForCurrentUser(@AuthenticationPrincipal User user) {
-        return shoppingCartService.getShoppingCartForCurrentUser(user);
+    public ShoppingCartDto getShoppingCartForCurrentUser(@RequestParam Long userId) {
+        return shoppingCartService.getShoppingCartForCurrentUser(userId);
     }
 
     @PostMapping
@@ -25,12 +25,12 @@ public class ShoppingCartController {
     }
 
     @PutMapping("/items/{cartItemId}")
-    public ShoppingCartDto updateCartItemQuantity(@PathVariable Long cartItemId, @RequestParam int quantity,@AuthenticationPrincipal User user) {
-        return shoppingCartService.updateCartItemQuantity(cartItemId, quantity, user);
+    public ShoppingCartDto updateCartItemQuantity(@PathVariable Long cartItemId, @RequestParam int quantity, @RequestParam Long userId) {
+        return shoppingCartService.updateCartItemQuantity(cartItemId, quantity, userId);
     }
 
     @DeleteMapping("/items/{cartItemId}")
-    public void removeCartItem(@PathVariable Long cartItemId,@AuthenticationPrincipal User user) {
-        shoppingCartService.removeCartItem(cartItemId, user);
+    public void removeCartItem(@PathVariable Long cartItemId, @RequestParam Long userId) {
+        shoppingCartService.removeCartItem(cartItemId, userId);
     }
 }

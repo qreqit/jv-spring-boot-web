@@ -28,13 +28,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartMapper shoppingCartMapper;
     private final CartItemMapper cartItemMapper;
     private final BookRepository bookRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     @Override
-    public ShoppingCartDto getShoppingCartForCurrentUser(User user) {
+    public ShoppingCartDto getShoppingCartForCurrentUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
         ShoppingCart shoppingCart = user.getShoppingCart();
         Hibernate.initialize(shoppingCart.getCartItems());
+        Hibernate.initialize(user.getRoles());
         shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook().getCategories()));
+        shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook().getOrderItems()));
         return shoppingCartMapper.toDto(shoppingCart);
     }
 
@@ -42,7 +47,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartDto addBookToShoppingCart(CartItemRequestDto cartItemDto) {
         ShoppingCart shoppingCart = shoppingCartRepository.findById(cartItemDto.getShoppingCartId())
-                .orElseThrow(() -> new IllegalArgumentException("Shopping csrt not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Shopping cart not found"));
 
         Optional<CartItem> existingItemOpt = shoppingCart.getCartItems().stream()
                 .filter(item -> item.getBook().getId().equals(cartItemDto.getBookId()))
@@ -75,11 +80,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Transactional
-        @Override
-    public ShoppingCartDto updateCartItemQuantity(Long cartItemId, int quantity, User user) {
+    @Override
+    public ShoppingCartDto updateCartItemQuantity(Long cartItemId, int quantity, Long userId) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be a positive integer");
         }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         ShoppingCart shoppingCart = user.getShoppingCart();
         CartItem cartItem = shoppingCart.getCartItems().stream()
@@ -88,6 +95,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .orElseThrow(() -> new EntityNotFoundException("CartItem with ID " + cartItemId + " not found in the user's shopping cart"));
 
         cartItem.setQuantity(quantity);
+        Hibernate.initialize(shoppingCart.getCartItems());
+        Hibernate.initialize(user.getRoles());
+        shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getCategories()));
+        shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getOrderItems()));
         cartItemRepository.save(cartItem);
         ShoppingCart savedShoppingCart = shoppingCartRepository.save(shoppingCart);
 
@@ -96,7 +107,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public ShoppingCartDto removeCartItem(Long cartItemId, User user) {
+    public ShoppingCartDto removeCartItem(Long cartItemId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
         ShoppingCart shoppingCart = user.getShoppingCart();
         CartItem cartItem = shoppingCart.getCartItems().stream()
                 .filter(item -> item.getId().equals(cartItemId))
@@ -104,6 +118,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .orElseThrow(() ->new  EntityNotFoundException("CartItem with ID " + cartItemId + " not found"));
         shoppingCart.getCartItems().remove(cartItem);
         ShoppingCart savedshoppingCart = shoppingCartRepository.save(shoppingCart);
+        Hibernate.initialize(shoppingCart.getCartItems());
+        Hibernate.initialize(user.getRoles());
+        shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getCategories()));
+        shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getOrderItems()));
 
         return shoppingCartMapper.toDto(savedshoppingCart);
     }
