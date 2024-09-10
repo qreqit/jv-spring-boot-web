@@ -28,6 +28,9 @@ public class Order {
     private LocalDateTime orderDate = LocalDateTime.now();
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems;
+    @Column(name = "shipping_address", nullable = false)
+    private String shippingAddress;
+
 
     public enum Status {
         PENDING,

@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface OrderService {
-    OrderResponseDto addOrder(OrderRequestDto requestDto, User user);
+    OrderResponseDto addOrder(Long userId);
 
-    List<OrderResponseDto> getAllOrders(User user);
+    List<OrderResponseDto> getAllOrders(Long userId);
 
     OrderResponseDto updateOrderStatus(Long id, OrderRequestDto requestDto);
 

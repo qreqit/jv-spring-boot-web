@@ -38,6 +38,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart shoppingCart = user.getShoppingCart();
         Hibernate.initialize(shoppingCart.getCartItems());
         Hibernate.initialize(user.getRoles());
+        Hibernate.initialize(shoppingCart.getUser().getOrders());
         shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook().getCategories()));
         shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook().getOrderItems()));
         return shoppingCartMapper.toDto(shoppingCart);
@@ -65,6 +66,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                             .orElseThrow(() -> new IllegalArgumentException("Book not found")));
                     Hibernate.initialize(shoppingCart.getUser());
                     Hibernate.initialize(shoppingCart.getUser().getRoles());
+                    Hibernate.initialize(shoppingCart.getUser().getOrders());
                     newCartItem.setQuantity(cartItemDto.getQuantity());
                     newCartItem.setShoppingCart(shoppingCart);
                     shoppingCart.getCartItems().add(newCartItem);
@@ -97,6 +99,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartItem.setQuantity(quantity);
         Hibernate.initialize(shoppingCart.getCartItems());
         Hibernate.initialize(user.getRoles());
+        Hibernate.initialize(shoppingCart.getUser().getOrders());
         shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getCategories()));
         shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getOrderItems()));
         cartItemRepository.save(cartItem);
@@ -120,6 +123,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart savedshoppingCart = shoppingCartRepository.save(shoppingCart);
         Hibernate.initialize(shoppingCart.getCartItems());
         Hibernate.initialize(user.getRoles());
+        Hibernate.initialize(shoppingCart.getUser().getOrders());
         shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getCategories()));
         shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getOrderItems()));
 

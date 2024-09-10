@@ -6,10 +6,8 @@ import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.order.OrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
 import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
-import mate.academy.springbootwebgreqit.model.User;
 import mate.academy.springbootwebgreqit.service.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -21,14 +19,14 @@ public class OrderController {
 
     @PostMapping
     @ApiOperation("Make order")
-    public OrderResponseDto addOrder(@RequestBody @Valid OrderRequestDto requestDto, @AuthenticationPrincipal User user) {
-        return orderService.addOrder(requestDto, user);
+    public OrderResponseDto addOrder(@RequestParam Long userId) {
+        return orderService.addOrder(userId);
     }
 
     @ApiOperation("Get all orders")
     @GetMapping
-    public List<OrderResponseDto> getAllOrders(@AuthenticationPrincipal User user) {
-        return orderService.getAllOrders(user);
+    public List<OrderResponseDto> getAllOrders(@RequestParam Long userId) {
+        return orderService.getAllOrders(userId);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
