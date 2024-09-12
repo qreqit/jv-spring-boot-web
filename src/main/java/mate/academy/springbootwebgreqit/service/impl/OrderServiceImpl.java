@@ -17,7 +17,6 @@ import mate.academy.springbootwebgreqit.repository.OrderRepository;
 import mate.academy.springbootwebgreqit.repository.ShoppingCartRepository;
 import mate.academy.springbootwebgreqit.repository.UserRepository;
 import mate.academy.springbootwebgreqit.service.OrderService;
-import mate.academy.springbootwebgreqit.service.ShoppingCartService;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
@@ -47,11 +46,6 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalArgumentException("Shopping cart is empty");
         }
 
-        Hibernate.initialize(user.getOrders());
-
-        Hibernate.initialize(shoppingCart.getCartItems());
-        shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook()));
-
         BigDecimal total = shoppingCart.getCartItems().stream()
                 .map(item -> item.getBook().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -62,6 +56,9 @@ public class OrderServiceImpl implements OrderService {
         order.setTotal(total);
         order.setOrderDate(LocalDateTime.now());
         order.setShippingAddress(user.getShippingAddress());
+
+        Hibernate.initialize(user.getOrders());
+        Hibernate.initialize(user.getId());
 
         Set<OrderItem> orderItems = shoppingCart.getCartItems().stream()
                 .map(cartItem -> {
@@ -75,10 +72,15 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toSet());
 
         order.setOrderItems(orderItems);
-        orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        Hibernate.initialize(savedOrder.getOrderItems());
+        savedOrder.getOrderItems().forEach(orderItem -> Hibernate.initialize(orderItem.getBook()));
 
         shoppingCart.getCartItems().clear();
         shoppingCartRepository.save(shoppingCart);
+
+        Hibernate.initialize(shoppingCart.getCartItems());
+        shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook()));
 
         return orderMapper.toDto(order);
     }
@@ -88,7 +90,11 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderResponseDto> getAllOrders(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        user.getOrders().forEach(order -> Hibernate.initialize(order.getOrderItems()));
+        Hibernate.initialize(user.getOrders());
+        user.getOrders().forEach(order -> {
+            Hibernate.initialize(order.getOrderItems());
+            order.getOrderItems().forEach(orderItem -> Hibernate.initialize(orderItem.getBook()));
+        });
         return orderRepository.findByUser(user).stream()
                 .map(orderMapper::toDto)
                 .toList();

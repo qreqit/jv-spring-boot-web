@@ -5,6 +5,7 @@ import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
 import mate.academy.springbootwebgreqit.model.Order;
 import mate.academy.springbootwebgreqit.model.OrderItem;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 public interface OrderMapper {
     Order toModel(OrderRequestDto requestDto);
 
+    @Mapping(source = "user.id", target = "userId")
     OrderResponseDto toDto(Order order);
 
     default Set<OrderItem> mapOrderItemIds(Set<Long> orderItemIds) {
