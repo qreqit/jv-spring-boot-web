@@ -5,7 +5,6 @@ import mate.academy.springbootwebgreqit.dto.category.CreateCategoryRequestDto;
 import mate.academy.springbootwebgreqit.dto.category.UpdateCategoryRequestDto;
 import mate.academy.springbootwebgreqit.model.Category;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")

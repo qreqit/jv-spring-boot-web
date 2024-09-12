@@ -2,6 +2,7 @@ package mate.academy.springbootwebgreqit.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import mate.academy.springbootwebgreqit.dto.order.OrderDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
 import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
@@ -38,10 +39,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderResponseDto addOrder(Long userId) {
+    public OrderResponseDto addOrder(Long userId, OrderDto orderDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        ShoppingCart shoppingCart = user.getShoppingCart();
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserIdWithCartItems(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Shopping cart not found"));
         if (shoppingCart == null || shoppingCart.getCartItems().isEmpty()) {
             throw new IllegalArgumentException("Shopping cart is empty");
         }
@@ -50,12 +52,15 @@ public class OrderServiceImpl implements OrderService {
                 .map(item -> item.getBook().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        final Order order = new Order();
+        Hibernate.initialize(shoppingCart.getCartItems());
+        shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook()));
+
+        Order order = new Order();
         order.setUser(user);
         order.setStatus(Order.Status.PENDING);
         order.setTotal(total);
         order.setOrderDate(LocalDateTime.now());
-        order.setShippingAddress(user.getShippingAddress());
+        order.setShippingAddress(orderDto.getShippingAddress());
 
         Hibernate.initialize(user.getOrders());
         Hibernate.initialize(user.getId());
@@ -78,9 +83,6 @@ public class OrderServiceImpl implements OrderService {
 
         shoppingCart.getCartItems().clear();
         shoppingCartRepository.save(shoppingCart);
-
-        Hibernate.initialize(shoppingCart.getCartItems());
-        shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook()));
 
         return orderMapper.toDto(order);
     }

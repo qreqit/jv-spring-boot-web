@@ -3,6 +3,7 @@ package mate.academy.springbootwebgreqit.controller;
 import io.swagger.annotations.ApiOperation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import mate.academy.springbootwebgreqit.dto.order.OrderDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
 import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
@@ -19,8 +20,8 @@ public class OrderController {
 
     @PostMapping
     @ApiOperation("Make order")
-    public OrderResponseDto addOrder(@RequestParam Long userId) {
-        return orderService.addOrder(userId);
+    public OrderResponseDto addOrder(@RequestParam Long userId, @RequestBody OrderDto orderDto) {
+        return orderService.addOrder(userId, orderDto);
     }
 
     @ApiOperation("Get all orders")
