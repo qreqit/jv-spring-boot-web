@@ -102,8 +102,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Hibernate.initialize(shoppingCart.getCartItems());
         Hibernate.initialize(user.getRoles());
         Hibernate.initialize(shoppingCart.getUser().getOrders());
+
         shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getCategories()));
         shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getOrderItems()));
+
         cartItemRepository.save(cartItem);
         ShoppingCart savedShoppingCart = shoppingCartRepository.save(shoppingCart);
 
@@ -113,22 +115,34 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Transactional
     @Override
     public ShoppingCartDto removeCartItem(Long cartItemId, Long userId) {
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Shopping cart not found"));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        ShoppingCart shoppingCart = user.getShoppingCart();
         CartItem cartItem = shoppingCart.getCartItems().stream()
                 .filter(item -> item.getId().equals(cartItemId))
                 .findFirst()
                 .orElseThrow(() ->new  EntityNotFoundException("CartItem with ID " + cartItemId + " not found"));
+
         shoppingCart.getCartItems().remove(cartItem);
         ShoppingCart savedshoppingCart = shoppingCartRepository.save(shoppingCart);
+
         Hibernate.initialize(shoppingCart.getCartItems());
         Hibernate.initialize(user.getRoles());
         Hibernate.initialize(shoppingCart.getUser().getOrders());
+
         shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getCategories()));
         shoppingCart.getCartItems().forEach(ci -> Hibernate.initialize(cartItem.getBook().getOrderItems()));
 
         return shoppingCartMapper.toDto(savedshoppingCart);
+    }
+
+    @Override
+    public ShoppingCart createShoppingCart(User user) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(user);
+        shoppingCartRepository.save(shoppingCart);
+        return shoppingCart;
     }
 }

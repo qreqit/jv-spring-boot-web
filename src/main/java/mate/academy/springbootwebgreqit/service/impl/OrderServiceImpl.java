@@ -1,12 +1,12 @@
 package mate.academy.springbootwebgreqit.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import mate.academy.springbootwebgreqit.dto.order.OrderDto;
+import mate.academy.springbootwebgreqit.dto.order.CreateOrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
 import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
-import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.OrderItemMapper;
 import mate.academy.springbootwebgreqit.mapper.OrderMapper;
 import mate.academy.springbootwebgreqit.model.Order;
@@ -39,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderResponseDto addOrder(Long userId, OrderDto orderDto) {
+    public OrderResponseDto addOrder(Long userId, CreateOrderRequestDto createOrderRequestDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
@@ -55,14 +55,14 @@ public class OrderServiceImpl implements OrderService {
                 .map(item -> item.getBook().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        Order order = orderMapper.toModel(orderDto);
+        Order order = orderMapper.toModel(createOrderRequestDto);
         Hibernate.initialize(user.getOrders());
         Hibernate.initialize(user.getId());
         order.setUser(user);
         order.setStatus(Order.Status.PENDING);
         order.setTotal(total);
         order.setOrderDate(LocalDateTime.now());
-        order.setShippingAddress(orderDto.getShippingAddress());
+        order.setShippingAddress(createOrderRequestDto.getShippingAddress());
 
         Set<OrderItem> orderItems = shoppingCart.getCartItems().stream()
                 .map(cartItem -> {

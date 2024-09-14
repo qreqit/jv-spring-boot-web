@@ -4,7 +4,7 @@ databaseChangeLog:
       author: greqit
       changes:
         - createTable:
-            tableName: orderItems
+            tableName: order_Items
             columns:
               - column:
                   name: id

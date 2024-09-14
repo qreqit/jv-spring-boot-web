@@ -10,6 +10,5 @@ import org.springframework.data.jpa.repository.EntityGraph;
 public interface UserMapper {
     UserResponseDto toDto(User user);
 
-    @EntityGraph(attributePaths = "roles")
     User toUser(UserRegistrationRequestDto requestDto);
 }
