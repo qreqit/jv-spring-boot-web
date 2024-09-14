@@ -1,5 +1,6 @@
 package mate.academy.springbootwebgreqit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -58,5 +59,6 @@ public class Book {
     private boolean isDeleted = false;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<OrderItem> orderItems = new HashSet<>();
 }

@@ -1,5 +1,6 @@
 package mate.academy.springbootwebgreqit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -50,6 +51,7 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Order> orders = new HashSet<>();
 
     @Override

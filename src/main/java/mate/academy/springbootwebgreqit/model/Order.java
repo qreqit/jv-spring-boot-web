@@ -1,5 +1,6 @@
 package mate.academy.springbootwebgreqit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime orderDate = LocalDateTime.now();
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<OrderItem> orderItems;
     @Column(name = "shipping_address", nullable = false)
     private String shippingAddress;

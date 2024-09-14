@@ -16,8 +16,6 @@ import mate.academy.springbootwebgreqit.repository.ShoppingCartRepository;
 import mate.academy.springbootwebgreqit.repository.UserRepository;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
 import org.hibernate.Hibernate;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

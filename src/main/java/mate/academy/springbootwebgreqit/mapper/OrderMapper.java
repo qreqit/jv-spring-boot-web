@@ -1,5 +1,6 @@
 package mate.academy.springbootwebgreqit.mapper;
 
+import mate.academy.springbootwebgreqit.dto.order.OrderDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
 import mate.academy.springbootwebgreqit.model.Order;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
-    Order toModel(OrderRequestDto requestDto);
+    Order toModel(OrderDto orderDto);
 
     @Mapping(source = "user.id", target = "userId")
     OrderResponseDto toDto(Order order);

@@ -42,28 +42,27 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponseDto addOrder(Long userId, OrderDto orderDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUserIdWithCartItems(userId)
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
                 .orElseThrow(() -> new IllegalArgumentException("Shopping cart not found"));
         if (shoppingCart == null || shoppingCart.getCartItems().isEmpty()) {
             throw new IllegalArgumentException("Shopping cart is empty");
         }
 
+        Hibernate.initialize(shoppingCart.getCartItems());
+        shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook()));
+
         BigDecimal total = shoppingCart.getCartItems().stream()
                 .map(item -> item.getBook().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        Hibernate.initialize(shoppingCart.getCartItems());
-        shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook()));
-
-        Order order = new Order();
+        Order order = orderMapper.toModel(orderDto);
+        Hibernate.initialize(user.getOrders());
+        Hibernate.initialize(user.getId());
         order.setUser(user);
         order.setStatus(Order.Status.PENDING);
         order.setTotal(total);
         order.setOrderDate(LocalDateTime.now());
         order.setShippingAddress(orderDto.getShippingAddress());
-
-        Hibernate.initialize(user.getOrders());
-        Hibernate.initialize(user.getId());
 
         Set<OrderItem> orderItems = shoppingCart.getCartItems().stream()
                 .map(cartItem -> {

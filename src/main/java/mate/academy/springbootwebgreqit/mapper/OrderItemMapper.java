@@ -1,7 +1,6 @@
 package mate.academy.springbootwebgreqit.mapper;
 
 import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
-import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.model.OrderItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
