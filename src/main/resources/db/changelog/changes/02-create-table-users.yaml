@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: qreqit
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: shipping_address
+                  type: varchar(255)
+              - column:
+                  name: is_deleted
+                  type: boolean
+                  defaultValue: 'false'
+                  constraints:
+                    nullable: false
+              - column:
+                  name: shopping_cart_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: shopping_cart_id
+            constraintName: fk_users_shopping_cart
+            referencedTableName: shopping_carts
+            referencedColumnNames: id
