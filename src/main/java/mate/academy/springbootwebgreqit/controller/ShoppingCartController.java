@@ -20,8 +20,8 @@ public class ShoppingCartController {
     }
 
     @PostMapping
-    public ShoppingCartDto addBookToShoppingCart(@RequestBody CartItemRequestDto cartItem) {
-    return shoppingCartService.addBookToShoppingCart(cartItem);
+    public ShoppingCartDto addBookToShoppingCart(@RequestBody CartItemRequestDto cartItem, @RequestParam  Long userId) {
+    return shoppingCartService.addBookToShoppingCart(cartItem, userId);
     }
 
     @PutMapping("/items/{cartItemId}")

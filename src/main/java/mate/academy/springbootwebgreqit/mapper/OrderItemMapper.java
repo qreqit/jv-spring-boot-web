@@ -9,9 +9,7 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface OrderItemMapper {
     @Mapping(source = "book.id", target = "bookId")
-    @Named(value = "toDto")
     OrderItemResponseDto toDto(OrderItem orderItem);
 
-    @Mapping(source = "bookId", target = "book.id")
     OrderItem toModel(OrderItemResponseDto orderDto);
 }

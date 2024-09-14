@@ -9,7 +9,7 @@ import mate.academy.springbootwebgreqit.model.User;
 public interface ShoppingCartService {
     ShoppingCartDto getShoppingCartForCurrentUser(Long userId);
 
-    ShoppingCartDto addBookToShoppingCart(CartItemRequestDto cartItem);
+    ShoppingCartDto addBookToShoppingCart(CartItemRequestDto cartItem, Long userId);
 
     ShoppingCartDto updateCartItemQuantity(Long cartItemId, int quantity, Long userId);
 

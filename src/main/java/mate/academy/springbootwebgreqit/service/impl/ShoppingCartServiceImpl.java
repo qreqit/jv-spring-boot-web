@@ -46,8 +46,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public ShoppingCartDto addBookToShoppingCart(CartItemRequestDto cartItemDto) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findById(cartItemDto.getShoppingCartId())
+    public ShoppingCartDto addBookToShoppingCart(CartItemRequestDto cartItemDto, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
                 .orElseThrow(() -> new IllegalArgumentException("Shopping cart not found"));
 
         Optional<CartItem> existingItemOpt = shoppingCart.getCartItems().stream()
