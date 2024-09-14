@@ -41,11 +41,11 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponseDto addOrder(Long userId, CreateOrderRequestDto createOrderRequestDto) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
-                .orElseThrow(() -> new IllegalArgumentException("Shopping cart not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Shopping cart not found"));
         if (shoppingCart == null || shoppingCart.getCartItems().isEmpty()) {
-            throw new IllegalArgumentException("Shopping cart is empty");
+            throw new EntityNotFoundException("Shopping cart is empty");
         }
 
         Hibernate.initialize(shoppingCart.getCartItems());
@@ -56,7 +56,6 @@ public class OrderServiceImpl implements OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Order order = orderMapper.toModel(createOrderRequestDto);
-        Hibernate.initialize(user.getOrders());
         Hibernate.initialize(user.getId());
         order.setUser(user);
         order.setStatus(Order.Status.PENDING);
@@ -90,13 +89,13 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public List<OrderResponseDto> getAllOrders(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Hibernate.initialize(user.getOrders());
-        user.getOrders().forEach(order -> {
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        List<Order> orders = orderRepository.findByUser(user);
+        orders.forEach(order -> {
             Hibernate.initialize(order.getOrderItems());
             order.getOrderItems().forEach(orderItem -> Hibernate.initialize(orderItem.getBook()));
         });
-        return orderRepository.findByUser(user).stream()
+        return orders.stream()
                 .map(orderMapper::toDto)
                 .toList();
     }
@@ -107,6 +106,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Order not found"));
         order.setStatus(requestDto.getStatus());
         orderRepository.save(order);
+
         return orderMapper.toDto(order);
     }
 

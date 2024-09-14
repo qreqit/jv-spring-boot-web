@@ -12,5 +12,5 @@ public interface OrderMapper {
     Order toModel(CreateOrderRequestDto createOrderRequestDto);
 
     @Mapping(source = "user.id", target = "userId")
-    OrderResponseDto toDto(OrderRequestDto order);
+    OrderResponseDto toDto(Order order);
 }

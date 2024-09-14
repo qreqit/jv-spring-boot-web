@@ -39,13 +39,17 @@ public class UserServiceImpl implements UserService {
 
         User user = userMapper.toUser(requestDto);
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName(Role.RoleName.ROLE_ADMIN)
+        Role adminRole = roleRepository.findByName(Role.RoleName.ROLE_ADMIN)
                         .orElseThrow(() -> new EntityNotFoundException("Role not found"));
+        Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER)
+                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
         roles.add(userRole);
+        roles.add(adminRole);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(roles);
         userRepository.save(user);
-        shoppingCartService.createShoppingCart(user);
+        ShoppingCart shoppingCart = shoppingCartService.createShoppingCart(user);
+        user.setShoppingCart(shoppingCart);
         return userMapper.toDto(user);
     }
 }

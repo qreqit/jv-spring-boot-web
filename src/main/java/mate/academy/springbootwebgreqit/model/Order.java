@@ -29,7 +29,7 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<OrderItem> orderItems;
-    @Column(name = "shipping_address", nullable = false)
+    @Column(nullable = false)
     private String shippingAddress;
 
 

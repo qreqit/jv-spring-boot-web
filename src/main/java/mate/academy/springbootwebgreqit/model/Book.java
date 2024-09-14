@@ -60,5 +60,5 @@ public class Book {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<OrderItem> orderItems = new HashSet<>();
+    private Set<CartItem> cartItems = new HashSet<>();
 }
