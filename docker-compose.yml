@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:latest
+    image: book-store
     container_name: mysql-container
     environment:
       MYSQLDB_ROOT_PASSWORD: 1234567
@@ -10,9 +10,28 @@ services:
       MYSQLDB_USER: root
       MYSQLDB_PASSWORD: 1234567
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+
+  # Spring Boot application container
+  spring-boot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-boot-container
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/book_store
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234567
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: true
+      JWT_EXPIRATION: 3000000000000
+      JWT_SECRET: haveAGoodDayIfYouReadIt243509349584398534025
+    depends_on:
+      - mysql
 
 volumes:
   mysql-data:
