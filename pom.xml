@@ -140,7 +140,6 @@
             <scope>test</scope>
         </dependency>
 
-
     </dependencies>
     <build>
         <plugins>
@@ -189,19 +188,16 @@
                     <propertyFile>src/main/resources/liquibase.properties</propertyFile>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.3.1</version>
                 <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
-                    <encoding>UTF-8</encoding>
-                    <consoleOutput>true</consoleOutput>
-                    <failsOnError>true</failsOnError>
+                    <configLocation>src/main/resources/checkstyle.xml</configLocation>
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>validate</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
