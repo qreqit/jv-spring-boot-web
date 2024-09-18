@@ -1,30 +1,33 @@
-version: '3.8'
+version: '3.1'
 
 services:
   db:
-    image: mysql:8
+    image: mysql
     container_name: mysql_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQLDB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQLDB_DATABASE}
-      MYSQL_USER: ${MYSQLDB_USER}
-      MYSQL_PASSWORD: ${MYSQLDB_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: 1234567
+      MYSQLDB_DATABASE: book_store
+      MYSQLDB_USER: root
+      MYSQLDB_PASSWORD: 1234567
     ports:
-      - "${MYSQLDB_PORT}:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
   app:
     build: .
+    image: book-store
     container_name: spring_app
     restart: always
     ports:
-      - "8080:8080"
+      - "8081:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:${MYSQLDB_PORT}/${MYSQLDB_DATABASE}
-      SPRING_DATASOURCE_USERNAME: ${MYSQLDB_USER}
-      SPRING_DATASOURCE_PASSWORD: ${MYSQLDB_ROOT_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3307/book_store
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234567
+      JWT_SECRET: haveAGoodDayIfYouReadIt243509349584398534025
+      JWT_EXPIRATION_MS: 3000000000000
     depends_on:
       - db
 
