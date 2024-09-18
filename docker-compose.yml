@@ -8,7 +8,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 1234567
       MYSQL_DATABASE: book_store
-      MYSQL_USER: root
     ports:
       - "3307:3306"
     volumes:
@@ -22,7 +21,7 @@ services:
     ports:
       - "8081:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3307/book_store
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/book_store
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 1234567
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
