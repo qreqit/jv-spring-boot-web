@@ -10,7 +10,7 @@ services:
       MYSQLDB_DATABASE: book_store
       MYSQLDB_USER: root
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -23,12 +23,12 @@ services:
       - "8081:8080"
     environment:
       SPRING_APPLICATION_JSON: '{
-        "spring.datasource.url"  : "$spring.datasource.url",
-        "spring.datasource.username" : "$spring.datasource.username",
-        "spring.datasource.password" : "$spring.datasource.password",
-        "spring.jpa.hibernate.ddl-auto" : "$spring.jpa.hibernate.ddl-auto",
-        "jwt.secret" : "$jwt.secret",
-        "jwt.expiration" : "$jwt.expiration"
+        "spring.datasource.url"  : "jdbc:mysql://localhost:3307/book_store",
+        "spring.datasource.username" : "root",
+        "spring.datasource.password" : "1234567",
+        "spring.jpa.hibernate.ddl-auto" : "update",
+        "jwt.secret" : "haveAGoodDayIfYouReadIt243509349584398534025",
+        "jwt.expiration" : "3000000000000"
       }'
       JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     depends_on:
