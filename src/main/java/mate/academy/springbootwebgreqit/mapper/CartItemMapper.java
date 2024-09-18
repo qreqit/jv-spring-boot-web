@@ -1,6 +1,5 @@
 package mate.academy.springbootwebgreqit.mapper;
 
-import mate.academy.springbootwebgreqit.dto.cartItem.CartItemDto;
 import mate.academy.springbootwebgreqit.dto.cartItem.CartItemRequestDto;
 import mate.academy.springbootwebgreqit.dto.cartItem.CartItemResponseDto;
 import mate.academy.springbootwebgreqit.model.CartItem;

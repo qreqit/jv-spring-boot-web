@@ -5,9 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Table(name = "roles")
 @Entity
 @Getter

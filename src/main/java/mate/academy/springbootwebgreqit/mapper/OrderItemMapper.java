@@ -4,7 +4,6 @@ import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
 import mate.academy.springbootwebgreqit.model.OrderItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface OrderItemMapper {

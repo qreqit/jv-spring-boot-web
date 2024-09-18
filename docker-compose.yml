@@ -6,12 +6,11 @@ services:
     container_name: mysql_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 1234567
+      MYSQLDB_ROOT_PASSWORD: 1234567
       MYSQLDB_DATABASE: book_store
       MYSQLDB_USER: root
-      MYSQLDB_PASSWORD: 1234567
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -23,11 +22,15 @@ services:
     ports:
       - "8081:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3307/book_store
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1234567
-      JWT_SECRET: haveAGoodDayIfYouReadIt243509349584398534025
-      JWT_EXPIRATION_MS: 3000000000000
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url"  : "$spring.datasource.url",
+        "spring.datasource.username" : "$spring.datasource.username",
+        "spring.datasource.password" : "$spring.datasource.password",
+        "spring.jpa.hibernate.ddl-auto" : "$spring.jpa.hibernate.ddl-auto",
+        "jwt.secret" : "$jwt.secret",
+        "jwt.expiration" : "$jwt.expiration"
+      }'
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     depends_on:
       - db
 

@@ -1,9 +1,7 @@
 package mate.academy.springbootwebgreqit.service;
 
-import mate.academy.springbootwebgreqit.dto.cartItem.CartItemDto;
 import mate.academy.springbootwebgreqit.dto.cartItem.CartItemRequestDto;
 import mate.academy.springbootwebgreqit.dto.shoppingCart.ShoppingCartDto;
-import mate.academy.springbootwebgreqit.model.CartItem;
 import mate.academy.springbootwebgreqit.model.ShoppingCart;
 import mate.academy.springbootwebgreqit.model.User;
 

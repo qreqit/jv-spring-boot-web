@@ -15,9 +15,7 @@ import mate.academy.springbootwebgreqit.repository.BookRepository;
 import mate.academy.springbootwebgreqit.repository.CategoryRepository;
 import mate.academy.springbootwebgreqit.service.CategoryService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

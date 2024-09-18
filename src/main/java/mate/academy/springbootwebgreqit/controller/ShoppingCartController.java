@@ -3,9 +3,7 @@ package mate.academy.springbootwebgreqit.controller;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.cartItem.CartItemRequestDto;
 import mate.academy.springbootwebgreqit.dto.shoppingCart.ShoppingCartDto;
-import mate.academy.springbootwebgreqit.model.User;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
