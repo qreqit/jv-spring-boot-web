@@ -19,8 +19,6 @@ import java.util.stream.Collectors;
 
 @Mapper(config = MapperConfig.class)
 public interface BookMapper {
-    @Autowired
-    BookRepository bookRepository = null;
 
     BookDto toDto(Book book);
 
@@ -29,12 +27,6 @@ public interface BookMapper {
     Book toModel(CreateBookRequestDto requestDto);
 
     BookDtoWithoutCategotyIds toDtoWithoutCategories(Book book);
-
-    @Named("bookFromId")
-    default Book bookFromId(Long id) {
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id " + id + " not found"));
-    }
 
     @AfterMapping
     default void setCategoriyIds(@MappingTarget BookDto bookDto, Book book) {

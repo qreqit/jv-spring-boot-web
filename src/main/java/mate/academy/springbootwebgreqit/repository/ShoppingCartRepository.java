@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
-//    @EntityGraph(attributePaths = {"cartItems", "cartItems.book"})
-//    @Query("SELECT sc FROM ShoppingCart  sc WHERE  sc.user.id = :userId")
-    Optional<ShoppingCart> findByUser(User user);
+    @EntityGraph(attributePaths = {"cartItems", "cartItems.book"})
+    Optional<ShoppingCart> findByUserId(Long userId);
 }

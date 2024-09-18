@@ -22,14 +22,11 @@ public class AuthenticationService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
-    @Transactional
     public UserLoginResponseDto authenticate(UserLoginRequestDto request) {
-
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
                 String token = jwtUtil.generateToken(request.getEmail());
-
                 return new UserLoginResponseDto(token);
     }
 }

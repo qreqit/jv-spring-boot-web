@@ -3,12 +3,13 @@ package mate.academy.springbootwebgreqit.controller;
 import io.swagger.annotations.ApiOperation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import mate.academy.springbootwebgreqit.dto.order.OrderDto;
+import mate.academy.springbootwebgreqit.dto.order.CreateOrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
 import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
 import mate.academy.springbootwebgreqit.service.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -20,12 +21,14 @@ public class OrderController {
 
     @PostMapping
     @ApiOperation("Make order")
-    public OrderResponseDto addOrder(@RequestParam Long userId, @RequestBody OrderDto orderDto) {
-        return orderService.addOrder(userId, orderDto);
+    @PreAuthorize("hasRole('USER')")
+    public OrderResponseDto addOrder(@RequestParam Long userId, @RequestBody CreateOrderRequestDto createOrderRequestDto) {
+        return orderService.addOrder(userId, createOrderRequestDto);
     }
 
     @ApiOperation("Get all orders")
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
     public List<OrderResponseDto> getAllOrders(@RequestParam Long userId) {
         return orderService.getAllOrders(userId);
     }
@@ -39,13 +42,15 @@ public class OrderController {
 
     @GetMapping("/{orderId}/items")
     @ApiOperation("Get all items from order by order id")
-    public List<OrderItemResponseDto> getAllItemsFromOrder(@PathVariable Long orderId) {
+    @PreAuthorize("hasRole('USER')")
+    public List<OrderItemResponseDto> getAllItemsFromOrder(@PathVariable Long orderId, Authentication authentication) {
         return orderService.getAllItemsFromOrder(orderId);
     }
 
     @GetMapping("{orderId}/items/{itemId}")
     @ApiOperation("Get item from order by order id and item id")
-    public OrderItemResponseDto getItemFromOrderById(@PathVariable Long orderId, @PathVariable Long itemId) {
+    @PreAuthorize("hasRole('USER')")
+    public OrderItemResponseDto getItemFromOrderById(@PathVariable Long orderId, @PathVariable Long itemId, Authentication authentication) {
         return orderService.getItemFromOrderById(orderId, itemId);
     }
 }

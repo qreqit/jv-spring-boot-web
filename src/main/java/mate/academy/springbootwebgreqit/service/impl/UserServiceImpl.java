@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.user.UserRegistrationRequestDto;
 import mate.academy.springbootwebgreqit.dto.user.UserResponseDto;
+import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.exception.RegistrationException;
 import mate.academy.springbootwebgreqit.mapper.UserMapper;
 import mate.academy.springbootwebgreqit.model.Role;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final ShoppingCartServiceImpl shoppingCartService;
 
     @Override
     @Transactional
@@ -37,20 +39,17 @@ public class UserServiceImpl implements UserService {
 
         User user = userMapper.toUser(requestDto);
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName(Role.RoleName.ROLE_ADMIN)
-                        .orElseThrow(() -> new IllegalArgumentException("Role not found"));
+        Role adminRole = roleRepository.findByName(Role.RoleName.ROLE_ADMIN)
+                        .orElseThrow(() -> new EntityNotFoundException("Role not found"));
+        Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER)
+                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
         roles.add(userRole);
+        roles.add(adminRole);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(roles);
-        User savedUser = userRepository.save(user);
-
-        ShoppingCart shoppingCartForUser = new ShoppingCart();
-        shoppingCartForUser.setUser(savedUser);
-        ShoppingCart savedShoppingCart = shoppingCartRepository.save(shoppingCartForUser);
-
-        savedUser.setShoppingCart(savedShoppingCart);
-        userRepository.save(savedUser);
-
+        userRepository.save(user);
+        ShoppingCart shoppingCart = shoppingCartService.createShoppingCart(user);
+        user.setShoppingCart(shoppingCart);
         return userMapper.toDto(user);
     }
 }
