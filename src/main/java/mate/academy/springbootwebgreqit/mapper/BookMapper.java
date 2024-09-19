@@ -11,7 +11,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import java.util.stream.Collectors;
 
-
 @Mapper(config = MapperConfig.class)
 public interface BookMapper {
 

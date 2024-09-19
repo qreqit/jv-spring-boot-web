@@ -136,7 +136,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         CartItem cartItem = shoppingCart.getCartItems().stream()
                 .filter(item -> item.getId().equals(cartItemId))
                 .findFirst()
-                .orElseThrow(() -> new  EntityNotFoundException("CartItem with ID "
+                .orElseThrow(() -> new EntityNotFoundException("CartItem with ID "
                         + cartItemId + " not found"));
 
         shoppingCart.getCartItems().remove(cartItem);

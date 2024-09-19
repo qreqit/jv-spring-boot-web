@@ -47,9 +47,9 @@ public class Book {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-        name = "books_categories",
-        joinColumns = @JoinColumn(name = "book_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id")
+            name = "books_categories",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

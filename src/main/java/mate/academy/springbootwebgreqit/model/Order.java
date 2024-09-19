@@ -20,7 +20,7 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @Column(nullable = false)
-    public Status status = Status.PENDING;
+    public Status status;
     @Column(nullable = false)
     private BigDecimal total;
     @Column(nullable = false)
@@ -30,7 +30,6 @@ public class Order {
     private Set<OrderItem> orderItems;
     @Column(nullable = false)
     private String shippingAddress;
-
 
     public enum Status {
         PENDING,

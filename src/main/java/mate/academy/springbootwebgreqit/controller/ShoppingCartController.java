@@ -27,7 +27,7 @@ public class ShoppingCartController {
 
     @PostMapping
     public ShoppingCartDto addBookToShoppingCart(@RequestBody CartItemRequestDto cartItem,
-                                                 @RequestParam  Long userId) {
+                                                 @RequestParam Long userId) {
     return shoppingCartService.addBookToShoppingCart(cartItem, userId);
     }
 

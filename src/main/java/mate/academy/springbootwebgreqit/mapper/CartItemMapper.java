@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface CartItemMapper {
-    CartItemResponseDto toDto(CartItem CartItem);
+    CartItemResponseDto toDto(CartItem cartItem);
 
-    CartItem toModel(CartItemRequestDto CartItemDto);
+    CartItem toModel(CartItemRequestDto cartItemDto);
 }

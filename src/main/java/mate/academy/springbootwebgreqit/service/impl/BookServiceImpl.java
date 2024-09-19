@@ -1,6 +1,5 @@
 package mate.academy.springbootwebgreqit.service.impl;
 
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.BookDto;
@@ -68,7 +67,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto update(UpdateBookRequestDto requestDto) {
         Book book = bookRepository.findById(requestDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Can't find book by id" + requestDto.getId()));
+                .orElseThrow(() -> new EntityNotFoundException("Can't find book by id"
+                        + requestDto.getId()));
         bookMapper.updateBookFromDto(requestDto, book);
         Book updatedBook = bookRepository.save(book);
         return bookMapper.toDto(updatedBook);
@@ -80,7 +80,7 @@ public class BookServiceImpl implements BookService {
         Specification<Book> bookSpecification = bookSpecificationBuilder.build(params);
         Page<Book> bookPage = bookRepository.findAll(bookSpecification, pageable);
         bookPage.forEach(book -> Hibernate.initialize(book.getCategories()));
-        return  bookPage.map(bookMapper::toDto);
+        return bookPage.map(bookMapper::toDto);
     }
 
     private Set<Category> categoriesIdToCategories(List<Long> categories) {
