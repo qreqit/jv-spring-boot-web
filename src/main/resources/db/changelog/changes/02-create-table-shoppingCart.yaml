@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 5
-      author: qreqit
+      id: 02
+      author: greqit
       changes:
         - createTable:
-            tableName: roles
+            tableName: shopping_carts
             columns:
               - column:
                   name: id
@@ -14,8 +14,7 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: name
-                  type: varchar(50)
+                  name: user_id
+                  type: bigint
                   constraints:
                     nullable: false
-                    unique: true
