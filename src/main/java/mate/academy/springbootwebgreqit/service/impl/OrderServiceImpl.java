@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.order.CreateOrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
-import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
+import mate.academy.springbootwebgreqit.dto.orderitem.OrderItemResponseDto;
 import mate.academy.springbootwebgreqit.mapper.OrderItemMapper;
 import mate.academy.springbootwebgreqit.mapper.OrderMapper;
 import mate.academy.springbootwebgreqit.model.Order;
@@ -49,10 +49,12 @@ public class OrderServiceImpl implements OrderService {
         }
 
         Hibernate.initialize(shoppingCart.getCartItems());
-        shoppingCart.getCartItems().forEach(cartItem -> Hibernate.initialize(cartItem.getBook()));
+        shoppingCart.getCartItems().forEach(cartItem ->
+                Hibernate.initialize(cartItem.getBook()));
 
         BigDecimal total = shoppingCart.getCartItems().stream()
-                .map(item -> item.getBook().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .map(item -> item.getBook().getPrice().multiply(BigDecimal
+                        .valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Order order = orderMapper.toModel(createOrderRequestDto);
@@ -61,9 +63,11 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(Order.Status.PENDING);
         order.setTotal(total);
         order.setOrderDate(LocalDateTime.now());
-        order.setShippingAddress(createOrderRequestDto.getShippingAddress());
+        order.setShippingAddress(createOrderRequestDto
+                .getShippingAddress());
 
-        Set<OrderItem> orderItems = shoppingCart.getCartItems().stream()
+        Set<OrderItem> orderItems = shoppingCart.getCartItems()
+                .stream()
                 .map(cartItem -> {
                     OrderItem orderItem = new OrderItem();
                     orderItem.setOrder(order);
@@ -77,7 +81,8 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderItems(orderItems);
         Order savedOrder = orderRepository.save(order);
         Hibernate.initialize(savedOrder.getOrderItems());
-        savedOrder.getOrderItems().forEach(orderItem -> Hibernate.initialize(orderItem.getBook()));
+        savedOrder.getOrderItems().forEach(orderItem ->
+                Hibernate.initialize(orderItem.getBook()));
 
         shoppingCart.getCartItems().clear();
         shoppingCartRepository.save(shoppingCart);
@@ -93,7 +98,8 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderRepository.findByUser(user);
         orders.forEach(order -> {
             Hibernate.initialize(order.getOrderItems());
-            order.getOrderItems().forEach(orderItem -> Hibernate.initialize(orderItem.getBook()));
+            order.getOrderItems().forEach(orderItem ->
+                    Hibernate.initialize(orderItem.getBook()));
         });
         return orders.stream()
                 .map(orderMapper::toDto)
@@ -103,7 +109,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderResponseDto updateOrderStatus(Long id, OrderRequestDto requestDto) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        Order order = orderRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Order not found"));
         order.setStatus(requestDto.getStatus());
         orderRepository.save(order);
 

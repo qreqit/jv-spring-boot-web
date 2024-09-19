@@ -11,7 +11,6 @@ import mate.academy.springbootwebgreqit.model.Role;
 import mate.academy.springbootwebgreqit.model.ShoppingCart;
 import mate.academy.springbootwebgreqit.model.User;
 import mate.academy.springbootwebgreqit.repository.RoleRepository;
-import mate.academy.springbootwebgreqit.repository.ShoppingCartRepository;
 import mate.academy.springbootwebgreqit.repository.UserRepository;
 import mate.academy.springbootwebgreqit.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +23,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final ShoppingCartRepository shoppingCartRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
@@ -34,7 +32,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponseDto register(UserRegistrationRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new RegistrationException("Can't register user with email: " + requestDto.getEmail());
+            throw new RegistrationException("Can't register user with email: "
+                    + requestDto.getEmail());
         }
 
         User user = userMapper.toUser(requestDto);

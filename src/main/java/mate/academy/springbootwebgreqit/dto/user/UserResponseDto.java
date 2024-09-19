@@ -7,7 +7,7 @@ public class UserResponseDto {
     private Long id;
     private String password;
     private String email;
-    private String FirstName;
-    private String LastName;
+    private String firstName;
+    private String lastName;
     private String shippingAddress;
 }

@@ -2,14 +2,22 @@ package mate.academy.springbootwebgreqit.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang3.builder.ToStringExclude;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import java.math.BigDecimal;
@@ -49,9 +57,9 @@ public class Book {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-        name = "books_categories",
-        joinColumns = @JoinColumn(name = "book_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id")
+            name = "books_categories",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

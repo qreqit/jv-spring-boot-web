@@ -35,14 +35,17 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
+                                .requestMatchers("/auth/**",
+                                        "/swagger-ui/**", "/v3/api-docs/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
                 //.httpBasic(Customizer.withDefaults())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class)
                 .userDetailsService(userDetailsService)
                 .build();
     }

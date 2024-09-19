@@ -22,7 +22,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
-    private static final String TOKEN_HEADER = "Bearer ";
+    private final String tokenHeader = "Bearer ";
 
     @Override
     protected void doFilterInternal(
@@ -43,11 +43,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-
     private String getToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_HEADER)) {
-            return bearerToken.substring(TOKEN_HEADER.length());
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(tokenHeader)) {
+            return bearerToken.substring(tokenHeader.length());
         }
         return null;
     }
