@@ -4,7 +4,6 @@ import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.repository.SpecificationProvider;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-
 import java.util.Arrays;
 
 @Component

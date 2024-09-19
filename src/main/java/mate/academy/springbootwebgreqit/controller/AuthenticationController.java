@@ -8,7 +8,10 @@ import mate.academy.springbootwebgreqit.dto.user.UserRegistrationRequestDto;
 import mate.academy.springbootwebgreqit.dto.user.UserResponseDto;
 import mate.academy.springbootwebgreqit.security.AuthenticationService;
 import mate.academy.springbootwebgreqit.service.UserService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
@@ -18,13 +21,14 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/registration")
-    public UserResponseDto register(@RequestBody @Valid UserRegistrationRequestDto requestBody) {
+    public UserResponseDto register(@RequestBody
+                                        @Valid UserRegistrationRequestDto requestBody) {
         return userService.register(requestBody);
     }
 
     @PostMapping("/login")
-    public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto response) {
+    public UserLoginResponseDto login(@RequestBody
+                                          @Valid UserLoginRequestDto response) {
         return authenticationService.authenticate(response);
     }
 }
-

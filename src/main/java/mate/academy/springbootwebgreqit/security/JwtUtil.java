@@ -34,7 +34,6 @@ public class JwtUtil {
                 .compact();
     }
 
-
     public boolean isValidToken(String token) {
         try {
             Jws<Claims> claimsJwts = Jwts.parserBuilder()
