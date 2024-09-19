@@ -1,8 +1,8 @@
 package mate.academy.springbootwebgreqit.controller;
 
 import lombok.RequiredArgsConstructor;
-import mate.academy.springbootwebgreqit.dto.cartItem.CartItemRequestDto;
-import mate.academy.springbootwebgreqit.dto.shoppingCart.ShoppingCartDto;
+import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
+import mate.academy.springbootwebgreqit.dto.shoppingcart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +28,13 @@ public class ShoppingCartController {
     @PostMapping
     public ShoppingCartDto addBookToShoppingCart(@RequestBody CartItemRequestDto cartItem,
                                                  @RequestParam Long userId) {
-    return shoppingCartService.addBookToShoppingCart(cartItem, userId);
+        return shoppingCartService.addBookToShoppingCart(cartItem, userId);
     }
 
     @PutMapping("/items/{cartItemId}")
     public ShoppingCartDto updateCartItemQuantity(@PathVariable Long cartItemId,
-                                                  @RequestParam int quantity, @RequestParam Long userId) {
+                                                  @RequestParam int quantity,
+                                                  @RequestParam Long userId) {
         return shoppingCartService.updateCartItemQuantity(cartItemId, quantity, userId);
     }
 

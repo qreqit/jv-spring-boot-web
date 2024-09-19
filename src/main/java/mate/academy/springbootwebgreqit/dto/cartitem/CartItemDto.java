@@ -1,4 +1,4 @@
-package mate.academy.springbootwebgreqit.dto.cartItem;
+package mate.academy.springbootwebgreqit.dto.cartitem;
 
 import lombok.Data;
 

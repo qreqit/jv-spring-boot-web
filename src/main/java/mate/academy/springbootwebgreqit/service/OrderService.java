@@ -3,7 +3,7 @@ package mate.academy.springbootwebgreqit.service;
 import mate.academy.springbootwebgreqit.dto.order.CreateOrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
-import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
+import mate.academy.springbootwebgreqit.dto.orderitem.OrderItemResponseDto;
 
 import java.util.List;
 

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.order.CreateOrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
-import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
+import mate.academy.springbootwebgreqit.dto.orderitem.OrderItemResponseDto;
 import mate.academy.springbootwebgreqit.service.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -62,7 +62,8 @@ public class OrderController {
     @ApiOperation("Get item from order by order id and item id")
     @PreAuthorize("hasRole('USER')")
     public OrderItemResponseDto getItemFromOrderById(@PathVariable Long orderId,
-                                                     @PathVariable Long itemId, Authentication authentication) {
+                                                     @PathVariable Long itemId,
+                                                     Authentication authentication) {
         return orderService.getItemFromOrderById(orderId, itemId);
     }
 }

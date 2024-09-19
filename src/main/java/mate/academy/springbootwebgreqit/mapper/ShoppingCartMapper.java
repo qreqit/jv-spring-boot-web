@@ -1,6 +1,6 @@
 package mate.academy.springbootwebgreqit.mapper;
 
-import mate.academy.springbootwebgreqit.dto.shoppingCart.ShoppingCartDto;
+import mate.academy.springbootwebgreqit.dto.shoppingcart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.model.ShoppingCart;
 import org.mapstruct.Mapper;
 

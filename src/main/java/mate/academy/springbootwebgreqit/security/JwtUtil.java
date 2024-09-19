@@ -59,7 +59,7 @@ public class JwtUtil {
     }
 
     private <T> T getClaimsFromToken(String token, Function<Claims, T> claimsResolver) {
-        final  Claims claims = Jwts.parserBuilder()
+        final Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secret)
                 .build()
                 .parseClaimsJws(token)

@@ -1,4 +1,4 @@
-package mate.academy.springbootwebgreqit.dto.orderItem;
+package mate.academy.springbootwebgreqit.dto.orderitem;
 
 import lombok.Data;
 

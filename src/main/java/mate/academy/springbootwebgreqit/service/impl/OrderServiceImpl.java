@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.order.CreateOrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderRequestDto;
 import mate.academy.springbootwebgreqit.dto.order.OrderResponseDto;
-import mate.academy.springbootwebgreqit.dto.orderItem.OrderItemResponseDto;
+import mate.academy.springbootwebgreqit.dto.orderitem.OrderItemResponseDto;
 import mate.academy.springbootwebgreqit.mapper.OrderItemMapper;
 import mate.academy.springbootwebgreqit.mapper.OrderMapper;
 import mate.academy.springbootwebgreqit.model.Order;

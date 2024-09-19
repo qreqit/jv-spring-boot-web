@@ -2,8 +2,8 @@ package mate.academy.springbootwebgreqit.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import mate.academy.springbootwebgreqit.dto.cartItem.CartItemRequestDto;
-import mate.academy.springbootwebgreqit.dto.shoppingCart.ShoppingCartDto;
+import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
+import mate.academy.springbootwebgreqit.dto.shoppingcart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.CartItemMapper;
 import mate.academy.springbootwebgreqit.mapper.ShoppingCartMapper;
