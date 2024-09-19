@@ -30,7 +30,7 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @Column(nullable = false)
-    public Status status;
+    private Status status;
     @Column(nullable = false)
     private BigDecimal total;
     @Column(nullable = false)
