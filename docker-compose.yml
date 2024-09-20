@@ -7,8 +7,8 @@ services:
     restart: unless-stopped
     env_file: ./.env
     environment:
-      - MYSQLDB_ROOT_PASSWORD=1234567
-      - MYSQLDB_DATABASE=book_store
+      MYSQLDB_ROOT_PASSWORD: 1234567
+      MYSQLDB_DATABASE: book-store
     ports:
       - 3307:3306
     healthcheck:
@@ -25,11 +25,15 @@ services:
     build: .
     env_file: ./.env
     ports:
-      - 8081:8080
+      - 8080:8081
     environment:
-      SPRING_APPLICATION_JSON: '{
-        "spring.datasource.url"  : "jdbc:mysql://localhost:3306/book-store",
-        "spring.datasource.username" : "root",
-        "spring.datasource.password" : "1234567",
-        "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.H2Dialect"
-      }'
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/book-store
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234567
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_OPEN_IN_VIEW: "false"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5Dialect
+      JWT_EXPIRATION: 3000000000000
+      JWT_SECRET: haveAGoodDayIfYouReadIt243509349584398534025
+
