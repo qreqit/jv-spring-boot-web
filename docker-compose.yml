@@ -2,13 +2,12 @@ version: "3.8"
 
 services:
   mysqldb:
-    platform: linux/amd64
     image: mysql
     restart: unless-stopped
-    env_file: ./.env
     environment:
       MYSQLDB_ROOT_PASSWORD: 1234567
       MYSQLDB_DATABASE: book-store
+      MYSQLDB_USER: root
     ports:
       - 3307:3306
     healthcheck:
@@ -22,10 +21,11 @@ services:
       - mysqldb
     restart: on-failure
     image: book-store
-    build: .
+    build:
+      dockerfile: Dockerfile
     env_file: ./.env
     ports:
-      - 8080:8081
+      - 8081:8080
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/book-store
       SPRING_DATASOURCE_USERNAME: root
