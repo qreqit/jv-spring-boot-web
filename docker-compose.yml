@@ -21,8 +21,7 @@ services:
       - mysqldb
     restart: on-failure
     image: book-store
-    build:
-      dockerfile: Dockerfile
+    build: .
     env_file: ./.env
     ports:
       - 8081:8080
