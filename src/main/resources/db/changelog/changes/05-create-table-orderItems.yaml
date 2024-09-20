@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 4
+      id: 5
       author: greqit
       changes:
         - createTable:
-            tableName: cart_items
+            tableName: order_Items
             columns:
               - column:
                   name: id
@@ -14,7 +14,7 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: shopping_cart_id
+                  name: order_id
                   type: bigint
                   constraints:
                     nullable: false
@@ -25,19 +25,23 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: quantity
-                  type: integer
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: decimal(19, 2)
                   constraints:
                     nullable: false
         - addForeignKeyConstraint:
-            baseTableName: cart_items
-            baseColumnNames: shopping_cart_id
-            constraintName: fk_cart_items_shopping_cart
-            referencedTableName: shopping_carts
+            baseTableName: order_Items
+            baseColumnNames: order_id
+            constraintName: fk_order_items_order
+            referencedTableName: orders
             referencedColumnNames: id
-
         - addForeignKeyConstraint:
-            baseTableName: cart_items
+            baseTableName: order_Items
             baseColumnNames: book_id
-            constraintName: fk_cart_items_book
+            constraintName: fk_order_items_book
             referencedTableName: books
             referencedColumnNames: id

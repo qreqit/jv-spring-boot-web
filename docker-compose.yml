@@ -6,10 +6,10 @@ services:
     restart: unless-stopped
     env_file: ./.env
     environment:
-      - MYSQL_ROOT_PASSWORD=1234567
-      - MYSQL_DATABASE=book-store
+      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQLDB_DATABASE
     ports:
-      - 3307:3306
+      - $MYSQLDB_PORT:$MYSQLDB_PORT_DOCKER
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       timeout: 30s
@@ -23,17 +23,17 @@ services:
     build: .
     env_file: ./.env
     ports:
-      - 8088:8080
-      - 5005:5005
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+      - $SPRING_DEBUGING_PORT:$SPRING_DEBUGING_PORT
     environment:
       SPRING_APPLICATION_JSON: '{
-      "spring.datasource.url" : "jdbc:mysql://mysqldb:3306/book-store",
-      "spring.datasource.username" : "root",
-      "spring.datasource.password" : "1234567",
-      "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQLDialect",
-      "spring.datasource.driver-class-name" : "com.mysql.cj.jdbc.Driver",
-      "spring.jpa.hibernate.ddl-auto" : "update",
-      "jwt.expiration": "1800000",
-      "jwt.secret": "haveAGoodDayIfYouReadIt243509349584398534025"
+      "spring.datasource.url" : "$SPRING_DATASOURSE_URL",
+      "spring.datasource.username" : "$MYSQLDB_USER",
+      "spring.datasource.password" : "$MYSQLDB_ROOT_PASSWORD",
+      "spring.jpa.properties.hibernate.dialect" : "$SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT",
+      "spring.datasource.driver-class-name" : "$SPRING_DATASOURSE_DRIVER_CLASS_NAME",
+      "spring.jpa.hibernate.ddl-auto" : "$SPRING_JPA_HIBERNATE_DDL_AUTO",
+      "jwt.expiration": "$JWT_EXPIRATION_MS",
+      "jwt.secret": "$JWT_SECRET"
       }'
       JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
