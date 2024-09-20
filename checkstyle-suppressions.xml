@@ -3,6 +3,5 @@
         "https://checkstyle.sourceforge.io/dtds/suppressions_1_1.dtd">
 
 <suppressions>
-    <!-- Ігнорування всіх перевірок для файлів у директорії згенерованого коду -->
     <suppress files=".*[\\/]target[\\/]generated-sources[\\/]annotations[\\/]mate[\\/]academy[\\/]springbootwebgreqit[\\/]mapper[\\/].*" checks=".*"/>
 </suppressions>
