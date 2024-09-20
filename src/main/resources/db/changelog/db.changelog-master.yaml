@@ -1,8 +1,8 @@
 databaseChangeLog:
   - include:
       file: /db/changelog/changes/01-create-table-books.yaml
-  - include:
-      file: db/changelog/changes/02-create-table-shoppingCart.yaml
+#  - include:
+#      file: db/changelog/changes/02-create-table-shoppingCart.yaml
   - include:
       file: db/changelog/changes/03-create-table-users-and-table-roles.yaml
   - include:
