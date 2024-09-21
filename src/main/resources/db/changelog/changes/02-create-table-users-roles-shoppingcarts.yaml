@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 3
+      id: 2
       author: greqit
       changes:
         - createTable:
@@ -41,6 +41,9 @@ databaseChangeLog:
                   name: is_deleted
                   type: boolean
                   defaultValue: false
+              - column:
+                  name: shopping_card_id
+                  type: bigint
 
         - createTable:
             tableName: roles
@@ -78,6 +81,22 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+
+        - createTable:
+            tableName: shopping_carts
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
 
         - addForeignKeyConstraint:
             baseTableName: shopping_carts

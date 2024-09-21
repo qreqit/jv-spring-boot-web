@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 5
+      id: 3
       author: greqit
       changes:
         - createTable:
-            tableName: orders
+            tableName: cart_items
             columns:
               - column:
                   name: id
@@ -14,33 +14,30 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: user_id
+                  name: shopping_cart_id
                   type: bigint
                   constraints:
                     nullable: false
               - column:
-                  name: status
-                  type: varchar(255)
+                  name: book_id
+                  type: bigint
                   constraints:
                     nullable: false
               - column:
-                  name: total
-                  type: decimal(19, 2)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: order_date
-                  type: timestamp
-                  constraints:
-                    nullable: false
-              - column:
-                  name: shipping_address
-                  type: varchar(255)
+                  name: quantity
+                  type: integer
                   constraints:
                     nullable: false
         - addForeignKeyConstraint:
-            baseTableName: orders
-            baseColumnNames: user_id
-            constraintName: fk_orders_user
-            referencedTableName: users
+            baseTableName: cart_items
+            baseColumnNames: shopping_cart_id
+            constraintName: fk_cart_items_shopping_cart
+            referencedTableName: shopping_carts
+            referencedColumnNames: id
+
+        - addForeignKeyConstraint:
+            baseTableName: cart_items
+            baseColumnNames: book_id
+            constraintName: fk_cart_items_book
+            referencedTableName: books
             referencedColumnNames: id

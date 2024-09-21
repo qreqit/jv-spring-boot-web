@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  mysqldb:
+    platform: linux/amd64
+    image: mysql
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQLDB_DATABASE
+    ports:
+      - $MYSQLDB_PORT:$MYSQLDB_PORT_DOCKER
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 30s
+      retries: 3
+  app:
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    restart: on-failure
+    image: book-store
+    build: .
+    env_file: ./.env
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+      - $SPRING_DEBUGING_PORT:$SPRING_DEBUGING_PORT
+    environment:
+      SPRING_APPLICATION_JSON: '{
+      "spring.datasource.url" : "$SPRING_DATASOURSE_URL",
+      "spring.datasource.username" : "$MYSQLDB_USER",
+      "spring.datasource.password" : "$MYSQLDB_ROOT_PASSWORD",
+      "spring.jpa.properties.hibernate.dialect" : "$SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT",
+      "spring.datasource.driver-class-name" : "$SPRING_DATASOURSE_DRIVER_CLASS_NAME",
+      "spring.jpa.hibernate.ddl-auto" : "$SPRING_JPA_HIBERNATE_DDL_AUTO",
+      "jwt.expiration": "$JWT_EXPIRATION_MS",
+      "jwt.secret": "$JWT_SECRET"
+      }'
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"

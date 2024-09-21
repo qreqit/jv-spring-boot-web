@@ -40,13 +40,13 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: coverImage
+                  name: cover_image
                   type: varchar(255)
                   constraints:
                     nullable: false
                   defaultValue: 'default_cover_image.jpg'
               - column:
-                  name: isDeleted
+                  name: is_deleted
                   type: boolean
                   defaultValue: false
 
