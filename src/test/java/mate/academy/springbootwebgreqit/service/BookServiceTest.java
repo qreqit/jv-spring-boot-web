@@ -1,6 +1,7 @@
 package mate.academy.springbootwebgreqit.service;
 
 import mate.academy.springbootwebgreqit.dto.BookDto;
+import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
 import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
 import mate.academy.springbootwebgreqit.mapper.BookMapper;
@@ -8,6 +9,7 @@ import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.model.Category;
 import mate.academy.springbootwebgreqit.repository.BookRepository;
 import mate.academy.springbootwebgreqit.repository.CategoryRepository;
+import mate.academy.springbootwebgreqit.repository.filter.BookSpecificationBuilder;
 import mate.academy.springbootwebgreqit.service.impl.BookServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +22,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
@@ -38,6 +42,10 @@ class BookServiceTest {
     private BookMapper bookMapper;
     @Mock
     private CategoryRepository categoryRepository;
+    @Mock
+    private BookSpecificationBuilder bookSpecificationBuilder;
+    @Mock
+    private BookSearchParameters bookSearchParameters;
 
     private CreateBookRequestDto requestDto;
     private Book book;
@@ -145,7 +153,7 @@ class BookServiceTest {
 
     @Test
     @DisplayName("Delete book by id")
-    void DeleteBookById_WithValidBook_ShouldDeleteBookById() {
+    void deleteBookById_WithValidBook_ShouldDeleteBookById() {
         Long bookId = book.getId();
         bookService.deleteById(bookId);
 
@@ -154,7 +162,7 @@ class BookServiceTest {
 
     @Test
     @DisplayName("Update book")
-    void UpdateBook_WithValidBook_ShouldUpdateDataInBook() {
+    void updateBook_WithValidBook_ShouldUpdateDataInBook() {
         when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
         when(bookRepository.save(any(Book.class))).thenReturn(book);
         doReturn(updatedBookDto).when(bookMapper).toDto(book);
@@ -165,4 +173,38 @@ class BookServiceTest {
         verify(bookRepository).findById(book.getId());
         verify(bookRepository).save(book);
     }
+
+    @Test
+@DisplayName("Search books with valid parameters")
+void search_WithValidParameters_ShouldReturnBooks() {
+    BookSearchParameters params = new BookSearchParameters(
+            new String[]{"wallet"},
+            new String[]{"John"},
+            new String[]{"9283234577892"});
+    Pageable pageable = PageRequest.of(0, 10);
+    Book book = new Book();
+    book.setId(1L);
+    book.setTitle("Test Book");
+    book.setCategories(Collections.singleton(new Category()));
+
+    Page<Book> bookPage = new PageImpl<>(List.of(book));
+    BookDto bookDto = new BookDto();
+    bookDto.setId(1L);
+    bookDto.setTitle("Test Book");
+
+    when(bookSpecificationBuilder.build(params)).thenReturn(mock(Specification.class));
+    when(bookRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(bookPage);
+    when(bookMapper.toDto(book)).thenReturn(bookDto);
+
+    Page<BookDto> actualPage = bookService.search(params, pageable);
+
+    assertNotNull(actualPage);
+    assertEquals(1, actualPage.getTotalElements());
+    assertEquals(1, actualPage.getContent().size());
+    assertEquals(bookDto, actualPage.getContent().get(0));
+
+    verify(bookSpecificationBuilder).build(params);
+    verify(bookRepository).findAll(any(Specification.class), eq(pageable));
+    verify(bookMapper).toDto(book);
+}
 }
