@@ -43,6 +43,8 @@ class BookServiceTest {
     private Book book;
     private BookDto bookDto;
     private Category category;
+    private BookDto updatedBookDto;
+    private UpdateBookRequestDto updateRequestDto;
 
     @InjectMocks
     private BookServiceImpl bookService;
@@ -81,6 +83,25 @@ class BookServiceTest {
         bookDto.setDescription("Updated description");
         bookDto.setCoverImage("https://example.com/updated-cover-.jpg");
         bookDto.setCategoriesIds(List.of(1L));
+
+        updateRequestDto = new UpdateBookRequestDto();
+        updateRequestDto.setId(book.getId());
+        updateRequestDto.setTitle("updated title");
+        updateRequestDto.setAuthor("updated author");
+        updateRequestDto.setIsbn("updated isbn");
+        updateRequestDto.setPrice(BigDecimal.valueOf(70.99));
+        updateRequestDto.setDescription("Updated description");
+        updateRequestDto.setCoverImage("https://example.com/updated-cover.jpg");
+
+        updatedBookDto = new BookDto();
+        updatedBookDto.setId(book.getId());
+        updatedBookDto.setTitle("updated title");
+        updatedBookDto.setAuthor("updated author");
+        updatedBookDto.setIsbn("updated isbn");
+        updatedBookDto.setPrice(BigDecimal.valueOf(70.99));
+        updatedBookDto.setDescription("Updated description");
+        updatedBookDto.setCoverImage("https://example.com/updated-cover.jpg");
+        updatedBookDto.setCategoriesIds(List.of(1L));
     }
 
     @Test
@@ -134,25 +155,6 @@ class BookServiceTest {
     @Test
     @DisplayName("Update book")
     void UpdateBook_WithValidBook_ShouldUpdateDataInBook() {
-        UpdateBookRequestDto updateRequestDto = new UpdateBookRequestDto();
-        updateRequestDto.setId(book.getId());
-        updateRequestDto.setTitle("updated title");
-        updateRequestDto.setAuthor("updated author");
-        updateRequestDto.setIsbn("updated isbn");
-        updateRequestDto.setPrice(BigDecimal.valueOf(70.99));
-        updateRequestDto.setDescription("Updated description");
-        updateRequestDto.setCoverImage("https://example.com/updated-cover.jpg");
-
-        BookDto updatedBookDto = new BookDto();
-        updatedBookDto.setId(book.getId());
-        updatedBookDto.setTitle("updated title");
-        updatedBookDto.setAuthor("updated author");
-        updatedBookDto.setIsbn("updated isbn");
-        updatedBookDto.setPrice(BigDecimal.valueOf(70.99));
-        updatedBookDto.setDescription("Updated description");
-        updatedBookDto.setCoverImage("https://example.com/updated-cover.jpg");
-        updatedBookDto.setCategoriesIds(List.of(1L));
-
         when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
         when(bookRepository.save(any(Book.class))).thenReturn(book);
         doReturn(updatedBookDto).when(bookMapper).toDto(book);
