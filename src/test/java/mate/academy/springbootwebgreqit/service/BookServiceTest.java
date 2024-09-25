@@ -1,7 +1,6 @@
 package mate.academy.springbootwebgreqit.service;
 
 import mate.academy.springbootwebgreqit.dto.BookDto;
-import mate.academy.springbootwebgreqit.dto.BookSearchParameters;
 import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
 import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
 import mate.academy.springbootwebgreqit.mapper.BookMapper;
@@ -21,14 +20,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -51,12 +49,10 @@ class BookServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Create category
         category = new Category();
         category.setId(1L);
         category.setName("Roman");
 
-        // Create book request DTO
         requestDto = new CreateBookRequestDto();
         requestDto.setTitle("wallet");
         requestDto.setAuthor("John");
@@ -66,7 +62,6 @@ class BookServiceTest {
         requestDto.setCoverImage("https://example.com/updated-cover-.jpg");
         requestDto.setCategoriesIds(Collections.singletonList(1L));
 
-        // Create book
         book = new Book();
         book.setId(1L);
         book.setTitle("wallet");
@@ -77,7 +72,6 @@ class BookServiceTest {
         book.setCoverImage("https://example.com/updated-cover-.jpg");
         book.setCategories(Collections.singleton(category));
 
-        // Create book DTO
         bookDto = new BookDto();
         book.setId(1L);
         bookDto.setTitle("wallet");
@@ -87,9 +81,7 @@ class BookServiceTest {
         bookDto.setDescription("Updated description");
         bookDto.setCoverImage("https://example.com/updated-cover-.jpg");
         bookDto.setCategoriesIds(List.of(1L));
-
     }
-
 
     @Test
     @DisplayName("save() should save a valid book and return BookDto")
