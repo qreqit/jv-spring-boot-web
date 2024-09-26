@@ -83,7 +83,7 @@ class BookServiceTest {
         book.setCategories(Collections.singleton(category));
 
         bookDto = new BookDto();
-        book.setId(1L);
+        bookDto.setId(1L);
         bookDto.setTitle("wallet");
         bookDto.setAuthor("John");
         bookDto.setIsbn("9283234577892");
@@ -144,7 +144,6 @@ class BookServiceTest {
 
         Page<BookDto> actualPage = bookService.findAll(PageRequest.of(0, 10));
 
-
         assertNotNull(actualPage);
         assertEquals(1, actualPage.getTotalElements());
         assertEquals(1, actualPage.getContent().size());
@@ -175,36 +174,36 @@ class BookServiceTest {
     }
 
     @Test
-@DisplayName("Search books with valid parameters")
-void search_WithValidParameters_ShouldReturnBooks() {
-    BookSearchParameters params = new BookSearchParameters(
-            new String[]{"wallet"},
-            new String[]{"John"},
-            new String[]{"9283234577892"});
-    Pageable pageable = PageRequest.of(0, 10);
-    Book book = new Book();
-    book.setId(1L);
-    book.setTitle("Test Book");
-    book.setCategories(Collections.singleton(new Category()));
+    @DisplayName("Search books with valid parameters")
+    void search_WithValidParameters_ShouldReturnBooks() {
+        BookSearchParameters params = new BookSearchParameters(
+                new String[]{"wallet"},
+                new String[]{"John"},
+                new String[]{"9283234577892"});
+        Pageable pageable = PageRequest.of(0, 10);
+        Book book = new Book();
+        book.setId(1L);
+        book.setTitle("Test Book");
+        book.setCategories(Collections.singleton(new Category()));
 
-    Page<Book> bookPage = new PageImpl<>(List.of(book));
-    BookDto bookDto = new BookDto();
-    bookDto.setId(1L);
-    bookDto.setTitle("Test Book");
+        Page<Book> bookPage = new PageImpl<>(List.of(book));
+        BookDto bookDto = new BookDto();
+        bookDto.setId(1L);
+        bookDto.setTitle("Test Book");
 
-    when(bookSpecificationBuilder.build(params)).thenReturn(mock(Specification.class));
-    when(bookRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(bookPage);
-    when(bookMapper.toDto(book)).thenReturn(bookDto);
+        when(bookSpecificationBuilder.build(params)).thenReturn(mock(Specification.class));
+        when(bookRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(bookPage);
+        when(bookMapper.toDto(book)).thenReturn(bookDto);
 
-    Page<BookDto> actualPage = bookService.search(params, pageable);
+        Page<BookDto> actualPage = bookService.search(params, pageable);
 
-    assertNotNull(actualPage);
-    assertEquals(1, actualPage.getTotalElements());
-    assertEquals(1, actualPage.getContent().size());
-    assertEquals(bookDto, actualPage.getContent().get(0));
+        assertNotNull(actualPage);
+        assertEquals(1, actualPage.getTotalElements());
+        assertEquals(1, actualPage.getContent().size());
+        assertEquals(bookDto, actualPage.getContent().get(0));
 
-    verify(bookSpecificationBuilder).build(params);
-    verify(bookRepository).findAll(any(Specification.class), eq(pageable));
-    verify(bookMapper).toDto(book);
-}
+        verify(bookSpecificationBuilder).build(params);
+        verify(bookRepository).findAll(any(Specification.class), eq(pageable));
+        verify(bookMapper).toDto(book);
+    }
 }
