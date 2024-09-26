@@ -6,7 +6,6 @@ import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
 import mate.academy.springbootwebgreqit.dto.UpdateBookRequestDto;
 import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.model.Category;
-import mate.academy.springbootwebgreqit.service.BookService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,8 +34,6 @@ class BookControllerTest {
     protected static MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private BookService bookService;
 
     private BookDto bookDto;
     private UpdateBookRequestDto updateRequestDto;
