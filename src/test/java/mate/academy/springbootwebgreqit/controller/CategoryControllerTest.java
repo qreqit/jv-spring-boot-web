@@ -6,6 +6,7 @@ import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
 import mate.academy.springbootwebgreqit.dto.category.CategoryDto;
 import mate.academy.springbootwebgreqit.dto.category.CreateCategoryRequestDto;
 import mate.academy.springbootwebgreqit.dto.category.UpdateCategoryRequestDto;
+import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.model.Category;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,6 +24,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.math.BigDecimal;
 import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -202,4 +205,45 @@ class CategoryControllerTest {
                 .andExpect(jsonPath("$[0].author").value("John"))
                 .andReturn();
     }
+
+    @Sql(scripts = "/data-sql/clear-tables.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    @DisplayName("Create category with invalid data")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void createCategory_ShouldReturnBadRequest_WhenDataIsInvalid() throws Exception {
+        CreateCategoryRequestDto invalidDto = new CreateCategoryRequestDto();
+        invalidDto.setDescription("Description without name");
+
+        String jsonRequest = objectMapper.writeValueAsString(invalidDto);
+
+        mockMvc.perform(post("/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Sql(scripts = "/data-sql/create-category.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/data-sql/clear-tables.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Test
+    @DisplayName("Update category with invalid data")
+    void updateCategory_WithInvalidData_ShouldReturnBadRequest() throws Exception {
+        Long categoryId = 1L;
+
+        UpdateCategoryRequestDto invalidRequest = new UpdateCategoryRequestDto();
+        invalidRequest.setId(categoryId);
+        invalidRequest.setName("");  // Invalid name
+        invalidRequest.setDescription("Updated description");
+
+        String jsonRequest = objectMapper.writeValueAsString(invalidRequest);
+
+        mockMvc.perform(put("/categories/{id}", categoryId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isBadRequest());
+    }
+
 }

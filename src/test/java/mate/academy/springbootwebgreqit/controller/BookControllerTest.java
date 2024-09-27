@@ -227,4 +227,29 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.content[0].author").value("John"))
                 .andReturn();
     }
+
+    @Sql(scripts = "/data-sql/create-category.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/data-sql/clear-tables.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Test
+    @DisplayName("Create book with invalid data")
+    void createBook_WithInvalidData_ShouldReturnBadRequest() throws Exception {
+        CreateBookRequestDto invalidBookRequest = new CreateBookRequestDto();
+        invalidBookRequest.setTitle("");
+        invalidBookRequest.setAuthor("John");
+        invalidBookRequest.setIsbn("9283234577892");
+        invalidBookRequest.setPrice(BigDecimal.valueOf(100000));
+        invalidBookRequest.setDescription(" description");
+        invalidBookRequest.setCoverImage("https://example.com/updated-cover-.jpg");
+        invalidBookRequest.setCategoriesIds(Collections.singletonList(1L));
+
+        String jsonRequest = objectMapper.writeValueAsString(invalidBookRequest);
+
+        mockMvc.perform(post("/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isBadRequest());
+    }
 }
