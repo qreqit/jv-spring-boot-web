@@ -99,7 +99,6 @@ class CategoryControllerTest {
     @DisplayName("Create a category")
     void createCategory_ShouldReturnCreatedCategory() throws Exception{
         String jsonRequest = objectMapper.writeValueAsString(createCategoryRequestDto);
-        System.out.println(createCategoryRequestDto);
 
         MvcResult result = mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)

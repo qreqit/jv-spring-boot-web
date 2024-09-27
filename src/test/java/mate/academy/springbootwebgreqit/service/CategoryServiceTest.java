@@ -28,13 +28,13 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryServiceTest {
-@Mock
+    @Mock
     private CategoryRepository categoryRepository;
-@Mock
+    @Mock
     private CategoryMapper categoryMapper;
-@Mock
+    @Mock
     private BookRepository bookRepository;
-@Mock
+    @Mock
     private BookMapper bookMapper;
 
     private Book book;
@@ -44,7 +44,7 @@ class CategoryServiceTest {
     private UpdateCategoryRequestDto updateCategoryRequestDto;
     private BookDtoWithoutCategotyIds withoutCategotyIds;
 
-@InjectMocks
+    @InjectMocks
     private CategoryServiceImpl categoryService;
 
     @BeforeEach
