@@ -9,7 +9,6 @@ import java.util.List;
 
 @Data
 public class CreateBookRequestDto {
-    @NotNull(message = "Title is required")
     @NotBlank(message = "Title cannot be empty")
     private String title;
     private String author;
