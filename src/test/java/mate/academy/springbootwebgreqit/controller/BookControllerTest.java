@@ -154,8 +154,6 @@ class BookControllerTest {
     @DisplayName("Create a book")
     void createBook_ShouldReturnCreatedBook() throws Exception {
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
-        System.out.println(jsonRequest);
-
         MvcResult result = mockMvc.perform(post("/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))

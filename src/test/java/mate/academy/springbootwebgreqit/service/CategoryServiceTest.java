@@ -63,7 +63,6 @@ class CategoryServiceTest {
         categoryDto.setDescription("Some description");
 
         updateCategoryRequestDto = new UpdateCategoryRequestDto();
-        updateCategoryRequestDto.setId(1L);
         updateCategoryRequestDto.setName("Horror");
         updateCategoryRequestDto.setDescription("Updated description");
 
@@ -137,7 +136,7 @@ class CategoryServiceTest {
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
         doReturn(categoryDto).when(categoryMapper).toDto(category);
 
-        CategoryDto actualDto = categoryService.update(updateCategoryRequestDto);
+        CategoryDto actualDto = categoryService.update(category.getId(), updateCategoryRequestDto);
 
         assertEquals(categoryDto, actualDto);
 

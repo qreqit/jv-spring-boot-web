@@ -68,7 +68,6 @@ class CategoryControllerTest {
         categoryDto.setDescription("Some description");
 
         updateCategoryRequestDto = new UpdateCategoryRequestDto();
-        updateCategoryRequestDto.setId(1L);
         updateCategoryRequestDto.setName("Horror");
         updateCategoryRequestDto.setDescription("Updated description");
 
@@ -232,8 +231,7 @@ class CategoryControllerTest {
         Long categoryId = 1L;
 
         UpdateCategoryRequestDto invalidRequest = new UpdateCategoryRequestDto();
-        invalidRequest.setId(categoryId);
-        invalidRequest.setName("");  // Invalid name
+        invalidRequest.setName("");
         invalidRequest.setDescription("Updated description");
 
         String jsonRequest = objectMapper.writeValueAsString(invalidRequest);

@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class UpdateCategoryRequestDto {
-    private Long id;
     @NotBlank(message = "Name cannot be blank")
     private String name;
     private String description;
