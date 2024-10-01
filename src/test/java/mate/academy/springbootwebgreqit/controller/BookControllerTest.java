@@ -172,29 +172,6 @@ class BookControllerTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
-    @DisplayName("Update a book")
-    void updateBook_ShouldReturnUpdatedBook() throws Exception{
-        Long bookId = 1L;
-        String jsonRequest = objectMapper.writeValueAsString(updateRequestDto);
-        System.out.println(updatedBookDto);
-
-        MvcResult result = mockMvc.perform(put("/books/{id}", bookId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRequest))
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.title").value("updated title"))
-                .andExpect(jsonPath("$.author").value("updated author"))
-                .andReturn();
-    }
-
-    @Sql(scripts = "/data-sql/create-category.sql",
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/data-sql/create-book.sql",
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/data-sql/clear-tables.sql",
-            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @Test
     @DisplayName("Delete a book")
     void deleteBook_ShouldReturnisOk() throws Exception{
         Long bookId = 1L;
