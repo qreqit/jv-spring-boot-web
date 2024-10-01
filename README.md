@@ -48,3 +48,6 @@ Create accounts and log in.
 Purchase books conveniently and quickly from home.
 Track the status of orders and know when they arrive at the post office.
 This is my first large-scale application, and I faced numerous challenges during its development. Each part was difficult but immensely educational, and I gained a lot of knowledge that will be invaluable for my future projects.
+
+#  📹Video Overview of Program Functionality
+You can also find a video of the program at this link: https://www.loom.com/share/0c519d24efc04b64acf9a3e9096b40cb?sid=e3750a8b-c044-4b13-b382-535497228e21
