@@ -6,7 +6,6 @@ import mate.academy.springbootwebgreqit.dto.CreateBookRequestDto;
 import mate.academy.springbootwebgreqit.dto.category.CategoryDto;
 import mate.academy.springbootwebgreqit.dto.category.CreateCategoryRequestDto;
 import mate.academy.springbootwebgreqit.dto.category.UpdateCategoryRequestDto;
-import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.model.Category;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,7 +24,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.math.BigDecimal;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -245,5 +243,4 @@ class CategoryControllerTest {
                         .content(jsonRequest))
                 .andExpect(status().isBadRequest());
     }
-
 }
