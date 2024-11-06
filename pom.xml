@@ -8,7 +8,7 @@
         <version>3.3.1</version>
         <relativePath/>
     </parent>
-    <groupId>mare.academy</groupId>
+    <groupId>mate.academy</groupId>
     <artifactId>Spring-Boot-web</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Spring-Boot-web</name>
