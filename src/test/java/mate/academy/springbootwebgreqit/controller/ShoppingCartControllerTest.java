@@ -3,9 +3,11 @@ package mate.academy.springbootwebgreqit.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
 import mate.academy.springbootwebgreqit.model.Book;
+import mate.academy.springbootwebgreqit.model.CartItem;
+import mate.academy.springbootwebgreqit.model.ShoppingCart;
 import mate.academy.springbootwebgreqit.model.User;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import java.math.BigDecimal;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -31,49 +35,43 @@ class ShoppingCartControllerTest {
 
     private User user;
     private Book book;
+    private CartItem cartItem;
+    private ShoppingCart shoppingCart;
 
-    @BeforeEach
-    void setUp() {
-        // Створення користувача та книги для тестів
-        user = new User();
-        user.setId(1L);
-        user.setFirstName("john");
-        user.setLastName("doe");
-        user.setPassword("password");
-
-        book = new Book();
-        book.setId(1L);
-        book.setTitle("Sample Book");
-        book.setAuthor("John Author");
-        book.setIsbn("1234567890");
-        book.setPrice(BigDecimal.valueOf(10.99));
-        book.setDescription("A sample book description.");
-        book.setCoverImage("https://example.com/book-cover.jpg");
-
-        // Мокінг або створення залежностей в класі ShoppingCartService.
+    @BeforeAll
+    static void beforeAll(@Autowired WebApplicationContext webApplicationContext) {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .build();
     }
 
-    @Sql(scripts = "/data-sql/clear-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql",
+            "/data-sql/create-shopping-carts.sql", "/data-sql/create-cart-item.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john_doe", roles = {"USER"})
     @Test
     @DisplayName("Get shopping cart for the current user")
     void getShoppingCart_ShouldReturnCartForUser() throws Exception {
         mockMvc.perform(get("/cart")
-                        .param("userId", "1")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("userId", "1")  // Ensure the userId parameter is passed
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId").value(1L))
-                .andExpect(jsonPath("$.items").isArray())
-                .andReturn();
+                .andExpect(jsonPath("$.user.id").value(1L))
+                .andExpect(jsonPath("$.cartItems[0].book.id").value(1L));
     }
 
-    @Sql(scripts = {"/data-sql/clear-tables.sql", "/data-sql/insert-tables-for-shoppingcart.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql",
+            "/data-sql/create-shopping-carts.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john_doe", roles = {"USER"})
     @Test
     @DisplayName("Add book to shopping cart")
     void addBookToShoppingCart_ShouldReturnUpdatedCart() throws Exception {
         CartItemRequestDto cartItemRequestDto = new CartItemRequestDto();
-        cartItemRequestDto.setBookId(1L);  // Використовуємо ID книги, яка була додана в базу
+        cartItemRequestDto.setBookId(1L);
         cartItemRequestDto.setQuantity(2);
 
         String jsonRequest = objectMapper.writeValueAsString(cartItemRequestDto);
@@ -83,13 +81,15 @@ class ShoppingCartControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items[0].book.title").value("wallet"))  // Перевіряємо, чи правильна книга
-                .andExpect(jsonPath("$.items[0].quantity").value(2))  // Перевіряємо кількість
+                .andExpect(jsonPath("$.cartItems[0].book.id").value(cartItemRequestDto.getBookId()))
+                .andExpect(jsonPath("$.cartItems[0].quantity").value(cartItemRequestDto.getQuantity()))
                 .andReturn();
     }
 
-
-    @Sql(scripts = "/data-sql/clear-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql",
+            "/data-sql/create-shopping-carts.sql", "/data-sql/create-cart-item.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john_doe", roles = {"USER"})
     @Test
     @DisplayName("Update cart item quantity")
@@ -100,13 +100,16 @@ class ShoppingCartControllerTest {
         mockMvc.perform(put("/cart/items/{cartItemId}", cartItemId)
                         .param("quantity", String.valueOf(newQuantity))
                         .param("userId", "1")
-                        .contentType(MediaType.APPLICATION_JSON))
+                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items[0].quantity").value(newQuantity))
+                .andExpect(jsonPath("$.cartItems[0].quantity").value(newQuantity))
                 .andReturn();
     }
 
-    @Sql(scripts = "/data-sql/clear-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql",
+            "/data-sql/create-shopping-carts.sql", "/data-sql/create-cart-item.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john_doe", roles = {"USER"})
     @Test
     @DisplayName("Remove item from cart")
@@ -117,7 +120,7 @@ class ShoppingCartControllerTest {
                         .param("userId", "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items").isEmpty())
+                .andExpect(jsonPath("$.cartItems").isEmpty())
                 .andReturn();
     }
 }
