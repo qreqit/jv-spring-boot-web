@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
 import mate.academy.springbootwebgreqit.dto.shoppingcart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,25 +22,25 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
     @GetMapping
-    public ShoppingCartDto getShoppingCartForCurrentUser(@RequestParam Long userId) {
-        return shoppingCartService.getShoppingCartForCurrentUser(userId);
+    public ShoppingCartDto getShoppingCartForCurrentUser(Authentication authentication) {
+        return shoppingCartService.getShoppingCartForCurrentUser(authentication);
     }
 
     @PostMapping
     public ShoppingCartDto addBookToShoppingCart(@RequestBody CartItemRequestDto cartItem,
-                                                 @RequestParam Long userId) {
-        return shoppingCartService.addBookToShoppingCart(cartItem, userId);
+                                                 Authentication authentication) {
+        return shoppingCartService.addBookToShoppingCart(cartItem, authentication);
     }
 
     @PutMapping("/items/{cartItemId}")
     public ShoppingCartDto updateCartItemQuantity(@PathVariable Long cartItemId,
                                                   @RequestParam int quantity,
-                                                  @RequestParam Long userId) {
-        return shoppingCartService.updateCartItemQuantity(cartItemId, quantity, userId);
+                                                  Authentication authentication) {
+        return shoppingCartService.updateCartItemQuantity(cartItemId, quantity, authentication);
     }
 
     @DeleteMapping("/items/{cartItemId}")
-    public void removeCartItem(@PathVariable Long cartItemId, @RequestParam Long userId) {
-        shoppingCartService.removeCartItem(cartItemId, userId);
+    public void removeCartItem(@PathVariable Long cartItemId, Authentication authentication) {
+        shoppingCartService.removeCartItem(cartItemId, authentication);
     }
 }

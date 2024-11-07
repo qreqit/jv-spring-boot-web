@@ -16,6 +16,7 @@ import mate.academy.springbootwebgreqit.repository.ShoppingCartRepository;
 import mate.academy.springbootwebgreqit.repository.UserRepository;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
 import org.hibernate.Hibernate;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -31,16 +32,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public ShoppingCartDto getShoppingCartForCurrentUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        ShoppingCart shoppingCart = user.getShoppingCart();
+    public ShoppingCartDto getShoppingCartForCurrentUser(Authentication authentication) {
+        User authUser = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new  EntityNotFoundException("User not found with email: " + authentication.getName()));
+        ShoppingCart shoppingCart = authUser.getShoppingCart();
         if (shoppingCart == null) {
-            throw new EntityNotFoundException("Shopping cart not found for user with ID "
-                    + userId);
+            throw new EntityNotFoundException("Shopping cart not found for user with email: "
+                    + authUser.getEmail());
         }
         Hibernate.initialize(shoppingCart.getCartItems());
-        Hibernate.initialize(user.getRoles());
+        Hibernate.initialize(authUser.getRoles());
         shoppingCart.getCartItems().forEach(cartItem ->
                 Hibernate.initialize(cartItem.getBook().getCategories()));
         shoppingCart.getCartItems().forEach(cartItem ->
@@ -52,8 +53,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartDto addBookToShoppingCart(
             CartItemRequestDto cartItemDto,
-            Long userId) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId)
+            Authentication authentication) {
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new  EntityNotFoundException("User not found with email: " + authentication.getName()));
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Shopping cart not found"));
 
         Optional<CartItem> existingItemOpt = shoppingCart.getCartItems().stream()
@@ -92,17 +95,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Transactional
     @Override
     public ShoppingCartDto updateCartItemQuantity(Long cartItemId,
-                                                  int quantity, Long userId) {
+                                                  int quantity, Authentication authentication) {
         if (quantity <= 0) {
             throw new EntityNotFoundException("Quantity must be a positive integer");
         }
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new  EntityNotFoundException("User not found with email: " + authentication.getName()));
 
         ShoppingCart shoppingCart = user.getShoppingCart();
         if (shoppingCart == null) {
             throw new EntityNotFoundException("Shopping cart not found for user with ID "
-                    + userId);
+                    + user.getId());
         }
         CartItem cartItem = shoppingCart.getCartItems().stream()
                 .filter(item -> item.getId().equals(cartItemId))
@@ -127,11 +130,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public ShoppingCartDto removeCartItem(Long cartItemId, Long userId) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId)
+    public ShoppingCartDto removeCartItem(Long cartItemId, Authentication authentication) {
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new  EntityNotFoundException("User not found with email: " + authentication.getName()));
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Shopping cart not found"));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         CartItem cartItem = shoppingCart.getCartItems().stream()
                 .filter(item -> item.getId().equals(cartItemId))
