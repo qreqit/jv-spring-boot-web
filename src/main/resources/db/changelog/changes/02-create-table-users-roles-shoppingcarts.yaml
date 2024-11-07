@@ -42,7 +42,7 @@ databaseChangeLog:
                   type: boolean
                   defaultValue: false
               - column:
-                  name: shopping_card_id
+                  name: shopping_cart_id
                   type: bigint
 
         - createTable:

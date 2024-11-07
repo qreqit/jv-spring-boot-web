@@ -2,10 +2,7 @@ package mate.academy.springbootwebgreqit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
-import mate.academy.springbootwebgreqit.model.Book;
-import mate.academy.springbootwebgreqit.model.CartItem;
-import mate.academy.springbootwebgreqit.model.ShoppingCart;
-import mate.academy.springbootwebgreqit.model.User;
+import mate.academy.springbootwebgreqit.security.CustomUserDetailService;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -33,6 +29,8 @@ class ShoppingCartControllerTest {
 
     @Autowired
     private ShoppingCartService shoppingCartService;
+    @Autowired
+    private CustomUserDetailService customUserDetailService;
 
     @BeforeAll
     static void beforeAll(@Autowired WebApplicationContext webApplicationContext) {
@@ -42,10 +40,11 @@ class ShoppingCartControllerTest {
                 .build();
     }
 
-    @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql",
-            "/data-sql/create-shopping-carts.sql", "/data-sql/create-cart-item.sql"},
+    @Sql(scripts = {"/data-sql/create-books.sql",
+            "/data-sql/create-users.sql", "/data-sql/create-cart-item.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
+            Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
     @Test
     @DisplayName("Get shopping cart for the current user")
@@ -58,10 +57,10 @@ class ShoppingCartControllerTest {
                 .andReturn();
     }
 
-    @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql",
-            "/data-sql/create-shopping-carts.sql"},
+    @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
+            Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
     @Test
     @DisplayName("Add book to shopping cart")
@@ -76,15 +75,18 @@ class ShoppingCartControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cartItems[0].book.id").value(cartItemRequestDto.getBookId()))
-                .andExpect(jsonPath("$.cartItems[0].quantity").value(cartItemRequestDto.getQuantity()))
+                .andExpect(jsonPath("$.cartItems[0].book.id")
+                        .value(cartItemRequestDto.getBookId()))
+                .andExpect(jsonPath("$.cartItems[0].quantity")
+                        .value(cartItemRequestDto.getQuantity()))
                 .andReturn();
     }
 
     @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql",
-            "/data-sql/create-shopping-carts.sql", "/data-sql/create-cart-item.sql"},
+            "/data-sql/create-cart-item.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
+            Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
     @Test
     @DisplayName("Update cart item quantity")
@@ -101,9 +103,10 @@ class ShoppingCartControllerTest {
     }
 
     @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql",
-            "/data-sql/create-shopping-carts.sql", "/data-sql/create-cart-item.sql"},
+            "/data-sql/create-cart-item.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
+            Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
     @Test
     @DisplayName("Remove item from cart")

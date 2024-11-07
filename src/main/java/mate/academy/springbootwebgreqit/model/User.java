@@ -46,7 +46,7 @@ public class User implements UserDetails {
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 
-    @JoinColumn(name = "shopping_card_id")
+    @JoinColumn(name = "shopping_cart_id", nullable = false)
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ShoppingCart shoppingCart;
 
