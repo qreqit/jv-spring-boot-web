@@ -24,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -92,6 +93,7 @@ class ShoppingCartServiceTest {
         when(authentication.getName()).thenReturn(user.getEmail());
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
+        when(shoppingCartRepository.findById(shoppingCart.getId())).thenReturn(Optional.of(shoppingCart));
 
         ShoppingCartDto result = shoppingCartService.getShoppingCartForCurrentUser(authentication, shoppingCart.getId());
 
@@ -137,8 +139,10 @@ class ShoppingCartServiceTest {
         when(shoppingCartRepository.save(shoppingCart)).thenReturn(shoppingCart);
         when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
         when(authentication.getName()).thenReturn(user.getEmail());
+        when(cartItemRepository.findById(cartItem.getId())).thenReturn(Optional.of(cartItem));
+        when(shoppingCartRepository.findByCartItems(Set.of(cartItem))).thenReturn(Optional.of(shoppingCart));
 
-            ShoppingCartDto result = shoppingCartService.updateCartItemQuantity(cartItem.getId(), requestUpdateQuantityDto, authentication);
+        ShoppingCartDto result = shoppingCartService.updateCartItemQuantity(cartItem.getId(), requestUpdateQuantityDto, authentication);
 
         assertNotNull(result);
         assertEquals(3, cartItem.getQuantity());

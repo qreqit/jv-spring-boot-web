@@ -2,6 +2,7 @@ package mate.academy.springbootwebgreqit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
+import mate.academy.springbootwebgreqit.dto.shoppingcart.RequestUpdateQuantityDto;
 import mate.academy.springbootwebgreqit.security.CustomUserDetailService;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,16 +41,18 @@ class ShoppingCartControllerTest {
                 .build();
     }
 
+
+    @Test
     @Sql(scripts = {"/data-sql/create-books.sql",
             "/data-sql/create-users.sql", "/data-sql/create-cart-item.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
             Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
-    @Test
     @DisplayName("Get shopping cart for the current user")
     void getShoppingCart_ShouldReturnCartForUser() throws Exception {
-        mockMvc.perform(get("/cart")
+        Long shoppingCartId = 1L;
+        mockMvc.perform(get("/cart/{shoppingCartId}", shoppingCartId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.user.id").value(1L))
@@ -57,12 +60,12 @@ class ShoppingCartControllerTest {
                 .andReturn();
     }
 
+    @Test
     @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
             Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
-    @Test
     @DisplayName("Add book to shopping cart")
     void addBookToShoppingCart_ShouldReturnUpdatedCart() throws Exception {
         CartItemRequestDto cartItemRequestDto = new CartItemRequestDto();
@@ -82,33 +85,36 @@ class ShoppingCartControllerTest {
                 .andReturn();
     }
 
-    @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql",
-            "/data-sql/create-cart-item.sql"},
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
-            Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
+
     @Test
+    @Sql(scripts = {"/data-sql/create-books.sql",
+            "/data-sql/create-users.sql", "/data-sql/create-cart-item.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
     @DisplayName("Update cart item quantity")
     void updateCartItemQuantity_ShouldReturnUpdatedQuantity() throws Exception {
         Long cartItemId = 1L;
-        int newQuantity = 3;
+        RequestUpdateQuantityDto quantityDto = new RequestUpdateQuantityDto();
+        quantityDto.setQuantity(3);
+
+        String jsonRequest = objectMapper.writeValueAsString(quantityDto);
 
         mockMvc.perform(put("/cart/items/{cartItemId}", cartItemId)
-                        .param("quantity", String.valueOf(newQuantity))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cartItems[0].quantity").value(newQuantity))
+                .andExpect(jsonPath("$.cartItems[0].quantity").value(quantityDto.getQuantity()))
                 .andReturn();
     }
 
+    @Test
     @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql",
             "/data-sql/create-cart-item.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
             Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
-    @Test
     @DisplayName("Remove item from cart")
     void removeItemFromCart_ShouldReturnEmptyCart() throws Exception {
         Long cartItemId = 1L;
