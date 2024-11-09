@@ -67,7 +67,8 @@ public class BookController {
         @ApiResponse(responseCode = "404", description = "Book not found")
     })
     @PutMapping("/{id}")
-    public BookDto updateBook(@PathVariable Long id, @RequestBody @Valid UpdateBookRequestDto updateBookRequestDto) {
+    public BookDto updateBook(@PathVariable Long id,
+                              @RequestBody @Valid UpdateBookRequestDto updateBookRequestDto) {
         return bookService.update(updateBookRequestDto);
     }
 

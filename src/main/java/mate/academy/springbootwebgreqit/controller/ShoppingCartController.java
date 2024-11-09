@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,13 +31,14 @@ public class ShoppingCartController {
         @ApiResponse(responseCode = "403", description = "Access denied")
     })
     @GetMapping("/{shoppingCartId}")
-    public ShoppingCartDto getShoppingCartForCurrentUser(Authentication authentication,@PathVariable Long shoppingCartId) {
+    public ShoppingCartDto getShoppingCartForCurrentUser(Authentication authentication,
+                                                         @PathVariable Long shoppingCartId) {
         return shoppingCartService.getShoppingCartForCurrentUser(authentication, shoppingCartId);
     }
 
     @Operation(summary = "Add book to shopping cart")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Book added to shopping cart successfully"),
+        @ApiResponse(responseCode = "200", description = "Book added to shopping cart"),
         @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping

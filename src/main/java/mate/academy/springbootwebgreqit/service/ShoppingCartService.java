@@ -8,13 +8,18 @@ import mate.academy.springbootwebgreqit.model.User;
 import org.springframework.security.core.Authentication;
 
 public interface ShoppingCartService {
-    ShoppingCartDto getShoppingCartForCurrentUser(Authentication authentication, Long shoppingCartId);
+    ShoppingCartDto getShoppingCartForCurrentUser(Authentication authentication,
+                                                  Long shoppingCartId);
 
-    ShoppingCartDto addBookToShoppingCart(CartItemRequestDto cartItem, Authentication authentication);
+    ShoppingCartDto addBookToShoppingCart(CartItemRequestDto cartItem,
+                                          Authentication authentication);
 
-    ShoppingCartDto updateCartItemQuantity(Long cartItemId, RequestUpdateQuantityDto quantity, Authentication authentication);
+    ShoppingCartDto updateCartItemQuantity(Long cartItemId,
+                                           RequestUpdateQuantityDto quantity,
+                                           Authentication authentication);
 
-    ShoppingCartDto removeCartItem(Long cartItemId, Authentication authentication);
+    ShoppingCartDto removeCartItem(Long cartItemId,
+                                   Authentication authentication);
 
     ShoppingCart createShoppingCart(User user);
 }

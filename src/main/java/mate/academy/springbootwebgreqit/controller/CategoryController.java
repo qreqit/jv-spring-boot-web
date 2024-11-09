@@ -67,7 +67,8 @@ public class CategoryController {
         @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @PutMapping("/{id}")
-    public CategoryDto updateCategory(@PathVariable Long id, @RequestBody @Valid UpdateCategoryRequestDto categoryDto) {
+    public CategoryDto updateCategory(@PathVariable Long id,
+                                      @RequestBody @Valid UpdateCategoryRequestDto categoryDto) {
         return categoryService.update(id, categoryDto);
     }
 
