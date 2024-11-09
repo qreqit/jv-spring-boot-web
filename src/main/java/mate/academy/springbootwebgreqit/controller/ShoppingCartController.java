@@ -1,5 +1,8 @@
 package mate.academy.springbootwebgreqit.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
 import mate.academy.springbootwebgreqit.dto.shoppingcart.ShoppingCartDto;
@@ -21,17 +24,32 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
+    @Operation(summary = "Get shopping cart for current user")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Shopping cart retrieved successfully"),
+        @ApiResponse(responseCode = "403", description = "Access denied")
+    })
     @GetMapping
     public ShoppingCartDto getShoppingCartForCurrentUser(Authentication authentication) {
         return shoppingCartService.getShoppingCartForCurrentUser(authentication);
     }
 
+    @Operation(summary = "Add book to shopping cart")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Book added to shopping cart successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
     @PostMapping
     public ShoppingCartDto addBookToShoppingCart(@RequestBody CartItemRequestDto cartItem,
                                                  Authentication authentication) {
         return shoppingCartService.addBookToShoppingCart(cartItem, authentication);
     }
 
+    @Operation(summary = "Update cart item quantity")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Cart item quantity updated successfully"),
+        @ApiResponse(responseCode = "404", description = "Cart item not found")
+    })
     @PutMapping("/items/{cartItemId}")
     public ShoppingCartDto updateCartItemQuantity(@PathVariable Long cartItemId,
                                                   @RequestParam int quantity,
@@ -39,6 +57,11 @@ public class ShoppingCartController {
         return shoppingCartService.updateCartItemQuantity(cartItemId, quantity, authentication);
     }
 
+    @Operation(summary = "Remove cart item")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Cart item removed successfully"),
+        @ApiResponse(responseCode = "404", description = "Cart item not found")
+    })
     @DeleteMapping("/items/{cartItemId}")
     public void removeCartItem(@PathVariable Long cartItemId, Authentication authentication) {
         shoppingCartService.removeCartItem(cartItemId, authentication);

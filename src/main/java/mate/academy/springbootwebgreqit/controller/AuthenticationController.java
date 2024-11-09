@@ -1,5 +1,8 @@
 package mate.academy.springbootwebgreqit.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.user.UserLoginRequestDto;
@@ -20,15 +23,23 @@ public class AuthenticationController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
+    @Operation(summary = "Register a new user")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User registered successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
     @PostMapping("/registration")
-    public UserResponseDto register(@RequestBody
-                                        @Valid UserRegistrationRequestDto requestBody) {
+    public UserResponseDto register(@RequestBody @Valid UserRegistrationRequestDto requestBody) {
         return userService.register(requestBody);
     }
 
+    @Operation(summary = "Authenticate a user")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User authenticated successfully"),
+        @ApiResponse(responseCode = "401", description = "Invalid credentials")
+    })
     @PostMapping("/login")
-    public UserLoginResponseDto login(@RequestBody
-                                          @Valid UserLoginRequestDto response) {
+    public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto response) {
         return authenticationService.authenticate(response);
     }
 }
