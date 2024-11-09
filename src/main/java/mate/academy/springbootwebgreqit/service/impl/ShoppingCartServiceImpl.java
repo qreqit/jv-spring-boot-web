@@ -3,6 +3,7 @@ package mate.academy.springbootwebgreqit.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
+import mate.academy.springbootwebgreqit.dto.shoppingcart.RequestUpdateQuantityDto;
 import mate.academy.springbootwebgreqit.dto.shoppingcart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.CartItemMapper;
@@ -19,6 +20,7 @@ import org.hibernate.Hibernate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +34,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public ShoppingCartDto getShoppingCartForCurrentUser(Authentication authentication) {
+    public ShoppingCartDto getShoppingCartForCurrentUser(Authentication authentication, Long shoppingCartId) {
         User authUser = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new  EntityNotFoundException("User not found with email: " + authentication.getName()));
-        ShoppingCart shoppingCart = authUser.getShoppingCart();
+        ShoppingCart shoppingCart =shoppingCartRepository.findById(shoppingCartId)
+                .orElseThrow(() -> new EntityNotFoundException("Shopping cart not found for user with id: " + shoppingCartId));
         if (shoppingCart == null) {
             throw new EntityNotFoundException("Shopping cart not found for user with email: "
                     + authUser.getEmail());
@@ -95,14 +98,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Transactional
     @Override
     public ShoppingCartDto updateCartItemQuantity(Long cartItemId,
-                                                  int quantity, Authentication authentication) {
-        if (quantity <= 0) {
+                                                  RequestUpdateQuantityDto quantity, Authentication authentication) {
+        if (quantity.getQuantity() <= 0) {
             throw new EntityNotFoundException("Quantity must be a positive integer");
         }
         User user = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new  EntityNotFoundException("User not found with email: " + authentication.getName()));
 
-        ShoppingCart shoppingCart = user.getShoppingCart();
+        CartItem cartItemToFindShoppingCart = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new  EntityNotFoundException("Cart item not found with id: " + cartItemId));
+
+        ShoppingCart shoppingCart = shoppingCartRepository
+                .findByCartItems(Set.of(cartItemToFindShoppingCart))
+                .orElseThrow(() -> new EntityNotFoundException("Shopping cart "
+                        + "not found by cart item with id: " + cartItemToFindShoppingCart));
         if (shoppingCart == null) {
             throw new EntityNotFoundException("Shopping cart not found for user with ID "
                     + user.getId());
@@ -113,7 +122,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .orElseThrow(() -> new EntityNotFoundException("CartItem with ID "
                         + cartItemId + " not found in the user's shopping cart"));
 
-        cartItem.setQuantity(quantity);
+        cartItem.setQuantity(quantity.getQuantity());
         Hibernate.initialize(shoppingCart.getCartItems());
         Hibernate.initialize(user.getRoles());
 

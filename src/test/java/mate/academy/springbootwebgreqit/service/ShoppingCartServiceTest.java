@@ -1,6 +1,7 @@
 package mate.academy.springbootwebgreqit.service;
 
 import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
+import mate.academy.springbootwebgreqit.dto.shoppingcart.RequestUpdateQuantityDto;
 import mate.academy.springbootwebgreqit.dto.shoppingcart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.CartItemMapper;
@@ -53,6 +54,7 @@ class ShoppingCartServiceTest {
     private Book book;
     private CartItem cartItem;
     private Authentication authentication;
+    private RequestUpdateQuantityDto requestUpdateQuantityDto;
 
     @BeforeEach
     void setUp() {
@@ -80,16 +82,18 @@ class ShoppingCartServiceTest {
         cartItem.setShoppingCart(shoppingCart);
 
         authentication = mock(Authentication.class);
+
+        requestUpdateQuantityDto = new RequestUpdateQuantityDto();
+        requestUpdateQuantityDto.setQuantity(3);
     }
 
     @Test
     void getShoppingCartForCurrentUser_ShouldReturnShoppingCartDto() {
-        user.setShoppingCart(shoppingCart);
         when(authentication.getName()).thenReturn(user.getEmail());
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
 
-        ShoppingCartDto result = shoppingCartService.getShoppingCartForCurrentUser(authentication);
+        ShoppingCartDto result = shoppingCartService.getShoppingCartForCurrentUser(authentication, shoppingCart.getId());
 
         assertNotNull(result);
         verify(userRepository).findByEmail(user.getEmail());
@@ -102,7 +106,7 @@ class ShoppingCartServiceTest {
         when(authentication.getName()).thenReturn(user.getEmail());
 
         assertThrows(EntityNotFoundException.class,
-                () -> shoppingCartService.getShoppingCartForCurrentUser(authentication));
+                () -> shoppingCartService.getShoppingCartForCurrentUser(authentication, shoppingCart.getId()));
     }
 
     @Test
@@ -127,7 +131,6 @@ class ShoppingCartServiceTest {
 
     @Test
     void updateCartItemQuantity_ShouldUpdateQuantityAndReturnShoppingCartDto() {
-        user.setShoppingCart(shoppingCart);
         shoppingCart.getCartItems().add(cartItem);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(cartItemRepository.save(cartItem)).thenReturn(cartItem);
@@ -135,7 +138,7 @@ class ShoppingCartServiceTest {
         when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
         when(authentication.getName()).thenReturn(user.getEmail());
 
-            ShoppingCartDto result = shoppingCartService.updateCartItemQuantity(cartItem.getId(), 3, authentication);
+            ShoppingCartDto result = shoppingCartService.updateCartItemQuantity(cartItem.getId(), requestUpdateQuantityDto, authentication);
 
         assertNotNull(result);
         assertEquals(3, cartItem.getQuantity());
