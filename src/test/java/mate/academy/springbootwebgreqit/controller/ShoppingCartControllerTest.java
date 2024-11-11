@@ -2,7 +2,7 @@ package mate.academy.springbootwebgreqit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
-import mate.academy.springbootwebgreqit.dto.shoppingcart.RequestUpdateQuantityDto;
+import mate.academy.springbootwebgreqit.dto.shoppingcart.UpdateCartItemDto;
 import mate.academy.springbootwebgreqit.security.CustomUserDetailService;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
 import org.junit.jupiter.api.BeforeAll;
@@ -95,7 +95,7 @@ class ShoppingCartControllerTest {
     @DisplayName("Update cart item quantity")
     void updateCartItemQuantity_ShouldReturnUpdatedQuantity() throws Exception {
         Long cartItemId = 1L;
-        RequestUpdateQuantityDto quantityDto = new RequestUpdateQuantityDto();
+        UpdateCartItemDto quantityDto = new UpdateCartItemDto();
         quantityDto.setQuantity(3);
 
         String jsonRequest = objectMapper.writeValueAsString(quantityDto);

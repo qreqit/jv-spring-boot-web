@@ -1,7 +1,7 @@
 package mate.academy.springbootwebgreqit.service;
 
 import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
-import mate.academy.springbootwebgreqit.dto.shoppingcart.RequestUpdateQuantityDto;
+import mate.academy.springbootwebgreqit.dto.shoppingcart.UpdateCartItemDto;
 import mate.academy.springbootwebgreqit.dto.shoppingcart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.model.ShoppingCart;
 import mate.academy.springbootwebgreqit.model.User;
@@ -15,7 +15,7 @@ public interface ShoppingCartService {
                                           Authentication authentication);
 
     ShoppingCartDto updateCartItemQuantity(Long cartItemId,
-                                           RequestUpdateQuantityDto quantity,
+                                           UpdateCartItemDto quantity,
                                            Authentication authentication);
 
     ShoppingCartDto removeCartItem(Long cartItemId,

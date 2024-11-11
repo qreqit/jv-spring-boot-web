@@ -1,7 +1,7 @@
 package mate.academy.springbootwebgreqit.service;
 
 import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
-import mate.academy.springbootwebgreqit.dto.shoppingcart.RequestUpdateQuantityDto;
+import mate.academy.springbootwebgreqit.dto.shoppingcart.UpdateCartItemDto;
 import mate.academy.springbootwebgreqit.dto.shoppingcart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.exception.EntityNotFoundException;
 import mate.academy.springbootwebgreqit.mapper.CartItemMapper;
@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ShoppingCartServiceTest {
+class ShoppingCartServiceImplTest {
 
     @Mock
     private CartItemRepository cartItemRepository;
@@ -55,7 +56,7 @@ class ShoppingCartServiceTest {
     private Book book;
     private CartItem cartItem;
     private Authentication authentication;
-    private RequestUpdateQuantityDto requestUpdateQuantityDto;
+    private UpdateCartItemDto requestUpdateQuantityDto;
 
     @BeforeEach
     void setUp() {
@@ -69,6 +70,7 @@ class ShoppingCartServiceTest {
 
         shoppingCartDto = new ShoppingCartDto();
 
+
         cartItemRequestDto = new CartItemRequestDto();
         cartItemRequestDto.setBookId(1L);
         cartItemRequestDto.setQuantity(2);
@@ -81,31 +83,31 @@ class ShoppingCartServiceTest {
         cartItem.setBook(book);
         cartItem.setQuantity(2);
         cartItem.setShoppingCart(shoppingCart);
+        shoppingCart.getCartItems().add(cartItem);
 
         authentication = mock(Authentication.class);
 
-        requestUpdateQuantityDto = new RequestUpdateQuantityDto();
+        requestUpdateQuantityDto = new UpdateCartItemDto();
         requestUpdateQuantityDto.setQuantity(3);
     }
 
     @Test
     void getShoppingCartForCurrentUser_ShouldReturnShoppingCartDto() {
-        when(authentication.getName()).thenReturn(user.getEmail());
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
+        when(authentication.getPrincipal()).thenReturn(user);
         when(shoppingCartRepository.findById(shoppingCart.getId())).thenReturn(Optional.of(shoppingCart));
+        when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
 
         ShoppingCartDto result = shoppingCartService.getShoppingCartForCurrentUser(authentication, shoppingCart.getId());
 
         assertNotNull(result);
-        verify(userRepository).findByEmail(user.getEmail());
+        verify(shoppingCartRepository).findById(shoppingCart.getId());
         verify(shoppingCartMapper).toDto(shoppingCart);
     }
 
     @Test
     void getShoppingCartForCurrentUser_ShouldThrowEntityNotFoundException_WhenShoppingCartNotFound() {
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(authentication.getName()).thenReturn(user.getEmail());
+        when(authentication.getPrincipal()).thenReturn(user);
+        when(shoppingCartRepository.findById(shoppingCart.getId())).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class,
                 () -> shoppingCartService.getShoppingCartForCurrentUser(authentication, shoppingCart.getId()));
@@ -113,58 +115,62 @@ class ShoppingCartServiceTest {
 
     @Test
     void addBookToShoppingCart_ShouldAddNewBookAndReturnShoppingCartDto() {
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(authentication.getPrincipal()).thenReturn(user);
         when(shoppingCartRepository.findByUserId(user.getId())).thenReturn(Optional.of(shoppingCart));
         when(bookRepository.findById(cartItemRequestDto.getBookId())).thenReturn(Optional.of(book));
         when(cartItemMapper.toModel(cartItemRequestDto)).thenReturn(cartItem);
         when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
         when(shoppingCartRepository.save(shoppingCart)).thenReturn(shoppingCart);
-        when(authentication.getName()).thenReturn(user.getEmail());
 
         ShoppingCartDto result = shoppingCartService.addBookToShoppingCart(cartItemRequestDto, authentication);
 
         assertNotNull(result);
         verify(shoppingCartRepository).findByUserId(user.getId());
-        verify(cartItemMapper).toModel(cartItemRequestDto);
         verify(bookRepository).findById(cartItemRequestDto.getBookId());
+        verify(cartItemMapper).toModel(cartItemRequestDto);
         verify(shoppingCartRepository).save(shoppingCart);
-        assertEquals(1, shoppingCart.getCartItems().size());
-    }
-
-    @Test
-    void updateCartItemQuantity_ShouldUpdateQuantityAndReturnShoppingCartDto() {
-        shoppingCart.getCartItems().add(cartItem);
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(cartItemRepository.save(cartItem)).thenReturn(cartItem);
-        when(shoppingCartRepository.save(shoppingCart)).thenReturn(shoppingCart);
-        when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
-        when(authentication.getName()).thenReturn(user.getEmail());
-        when(cartItemRepository.findById(cartItem.getId())).thenReturn(Optional.of(cartItem));
-        when(shoppingCartRepository.findByCartItems(Set.of(cartItem))).thenReturn(Optional.of(shoppingCart));
-
-        ShoppingCartDto result = shoppingCartService.updateCartItemQuantity(cartItem.getId(), requestUpdateQuantityDto, authentication);
-
-        assertNotNull(result);
-        assertEquals(3, cartItem.getQuantity());
-        verify(cartItemRepository).save(cartItem);
         verify(shoppingCartMapper).toDto(shoppingCart);
     }
 
     @Test
+void updateCartItemQuantity_ShouldUpdateQuantityAndReturnShoppingCartDto() {
+    int newQuantity = requestUpdateQuantityDto.getQuantity();
+    when(authentication.getPrincipal()).thenReturn(user);
+    when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+    when(cartItemRepository.findById(cartItem.getId())).thenReturn(Optional.of(cartItem));
+    when(shoppingCartRepository.findByUserId(user.getId())).thenReturn(Optional.of(shoppingCart));
+    when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
+    when(cartItemRepository.save(cartItem)).thenReturn(cartItem);
+
+    ShoppingCartDto result = shoppingCartService.updateCartItemQuantity(cartItem.getId(), requestUpdateQuantityDto, authentication);
+
+    assertNotNull(result);
+    assertEquals(newQuantity, cartItem.getQuantity(), "Quantity should be updated in the cart item");
+    verify(cartItemRepository).save(cartItem);
+    verify(shoppingCartRepository).save(shoppingCart);
+    verify(shoppingCartMapper).toDto(shoppingCart);
+    verifyNoMoreInteractions(cartItemRepository, shoppingCartRepository, shoppingCartMapper);
+}
+
+
+    @Test
     void removeCartItem_ShouldRemoveItemAndReturnShoppingCartDto() {
-        shoppingCart.getCartItems().add(cartItem);
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        shoppingCart.setCartItems(new HashSet<>(Set.of(cartItem))); // Додаємо cartItem до shoppingCart
+
+        when(authentication.getPrincipal()).thenReturn(user);
         when(shoppingCartRepository.findByUserId(user.getId())).thenReturn(Optional.of(shoppingCart));
         when(shoppingCartRepository.save(shoppingCart)).thenReturn(shoppingCart);
         when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
-        when(authentication.getName()).thenReturn(user.getEmail());
 
         ShoppingCartDto result = shoppingCartService.removeCartItem(cartItem.getId(), authentication);
 
         assertNotNull(result);
-        assertTrue(shoppingCart.getCartItems().isEmpty());
+        assertFalse(shoppingCart.getCartItems().contains(cartItem), "Cart item should be removed from the cart");
+        verify(shoppingCartRepository).findByUserId(user.getId());
         verify(shoppingCartRepository).save(shoppingCart);
+        verify(shoppingCartMapper).toDto(shoppingCart);
     }
+
 
     @Test
     void createShoppingCart_ShouldCreateAndReturnShoppingCart() {

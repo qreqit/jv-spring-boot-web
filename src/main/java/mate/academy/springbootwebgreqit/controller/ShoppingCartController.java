@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mate.academy.springbootwebgreqit.dto.cartitem.CartItemRequestDto;
-import mate.academy.springbootwebgreqit.dto.shoppingcart.RequestUpdateQuantityDto;
+import mate.academy.springbootwebgreqit.dto.shoppingcart.UpdateCartItemDto;
 import mate.academy.springbootwebgreqit.dto.shoppingcart.ShoppingCartDto;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
 import org.springframework.security.core.Authentication;
@@ -43,7 +43,7 @@ public class ShoppingCartController {
     })
     @PostMapping
     public ShoppingCartDto addBookToShoppingCart(@RequestBody CartItemRequestDto cartItem,
-                                                 @Valid Authentication authentication) {
+                                                 Authentication authentication) {
         return shoppingCartService.addBookToShoppingCart(cartItem, authentication);
     }
 
@@ -54,7 +54,7 @@ public class ShoppingCartController {
     })
     @PutMapping("/items/{cartItemId}")
     public ShoppingCartDto updateCartItemQuantity(@PathVariable Long cartItemId,
-                                                  @RequestBody RequestUpdateQuantityDto quantity,
+                                                  @RequestBody @Valid UpdateCartItemDto quantity,
                                                   Authentication authentication) {
         return shoppingCartService.updateCartItemQuantity(cartItemId, quantity, authentication);
     }
