@@ -109,7 +109,7 @@ class ShoppingCartServiceTest {
 
     @Test
     void getShoppingCartForCurrentUser_ShouldReturnShoppingCartDto() {
-        when(authentication.getPrincipal()).thenReturn(user);
+        when(userRepository.findByEmail(authentication.getName())).thenReturn(Optional.of(user));
         when(shoppingCartRepository.findById(shoppingCart.getId())).thenReturn(Optional.of(shoppingCart));
         when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
 
@@ -122,7 +122,7 @@ class ShoppingCartServiceTest {
 
     @Test
     void getShoppingCartForCurrentUser_ShouldThrowEntityNotFoundException_WhenShoppingCartNotFound() {
-        when(authentication.getPrincipal()).thenReturn(user);
+        when(userRepository.findByEmail(authentication.getName())).thenReturn(Optional.of(user));
         when(shoppingCartRepository.findById(shoppingCart.getId())).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class,
@@ -132,7 +132,7 @@ class ShoppingCartServiceTest {
     @Test
     void addWrongBookToShoppingCart_ShouldThrowNullPointerException() {
         cartItemRequestDto.setBookId(17L);
-        when(authentication.getPrincipal()).thenReturn(user);
+        when(userRepository.findByEmail(authentication.getName())).thenReturn(Optional.of(user));
         when(shoppingCartRepository.findByUserId(user.getId())).thenReturn(Optional.of(shoppingCart));
         when(bookRepository.findById(cartItemRequestDto.getBookId())).thenReturn(Optional.empty()); // Only essential stubs remain
 
@@ -168,9 +168,9 @@ class ShoppingCartServiceTest {
 
     @Test
     void removeCartItem_ShouldRemoveItemAndReturnShoppingCartDto() {
-        shoppingCart.setCartItems(new HashSet<>(Set.of(cartItem))); // Додаємо cartItem до shoppingCart
+        shoppingCart.setCartItems(new HashSet<>(Set.of(cartItem)));
 
-        when(authentication.getPrincipal()).thenReturn(user);
+        when(userRepository.findByEmail(authentication.getName())).thenReturn(Optional.of(user));
         when(shoppingCartRepository.findByUserId(user.getId())).thenReturn(Optional.of(shoppingCart));
         when(shoppingCartRepository.save(shoppingCart)).thenReturn(shoppingCart);
         when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);

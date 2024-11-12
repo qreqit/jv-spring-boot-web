@@ -35,7 +35,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartDto getShoppingCartForCurrentUser(Authentication authentication,
                                                          Long shoppingCartId) {
-        User user = (User) authentication.getPrincipal();
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new  IllegalArgumentException("User not found with id: "
+                        + authentication.getName()));
         ShoppingCart shoppingCart = shoppingCartRepository.findById(shoppingCartId)
                 .orElseThrow(() -> new EntityNotFoundException("Shopping cart not "
                         + "found for user with id: " + shoppingCartId));
@@ -51,7 +53,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ShoppingCartDto addBookToShoppingCart(
             CartItemRequestDto cartItemDto,
             Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new  IllegalArgumentException("User not found with id: "
+                        + authentication.getName()));
         ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Shopping cart not found"));
 
@@ -112,7 +116,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Transactional
     @Override
     public ShoppingCartDto removeCartItem(Long cartItemId, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new  IllegalArgumentException("User not found with id: "
+                        + authentication.getName()));
+
         ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Shopping cart not found"));
 
