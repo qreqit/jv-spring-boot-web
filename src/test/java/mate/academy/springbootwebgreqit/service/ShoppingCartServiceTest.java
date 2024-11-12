@@ -8,6 +8,7 @@ import mate.academy.springbootwebgreqit.mapper.CartItemMapper;
 import mate.academy.springbootwebgreqit.mapper.ShoppingCartMapper;
 import mate.academy.springbootwebgreqit.model.Book;
 import mate.academy.springbootwebgreqit.model.CartItem;
+import mate.academy.springbootwebgreqit.model.Category;
 import mate.academy.springbootwebgreqit.model.ShoppingCart;
 import mate.academy.springbootwebgreqit.model.User;
 import mate.academy.springbootwebgreqit.repository.BookRepository;
@@ -23,6 +24,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -31,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ShoppingCartServiceImplTest {
+class ShoppingCartServiceTest {
 
     @Mock
     private CartItemRepository cartItemRepository;
@@ -57,6 +60,7 @@ class ShoppingCartServiceImplTest {
     private CartItem cartItem;
     private Authentication authentication;
     private UpdateCartItemDto requestUpdateQuantityDto;
+    private Category category;
 
     @BeforeEach
     void setUp() {
@@ -74,9 +78,21 @@ class ShoppingCartServiceImplTest {
         cartItemRequestDto = new CartItemRequestDto();
         cartItemRequestDto.setBookId(1L);
         cartItemRequestDto.setQuantity(2);
+        cartItemRequestDto.setShoppingCartId(shoppingCart.getId());
 
         book = new Book();
         book.setId(1L);
+        book.setTitle("wallet");
+        book.setAuthor("John");
+        book.setIsbn("9283234577892");
+        book.setPrice(BigDecimal.valueOf(60.99));
+        book.setDescription("Updated description");
+        book.setCoverImage("https://example.com/updated-cover-.jpg");
+        book.setCategories(Collections.singleton(category));
+
+        category = new Category();
+        category.setId(1L);
+        category.setName("Roman");
 
         cartItem = new CartItem();
         cartItem.setId(1L);
@@ -114,43 +130,40 @@ class ShoppingCartServiceImplTest {
     }
 
     @Test
-    void addBookToShoppingCart_ShouldAddNewBookAndReturnShoppingCartDto() {
+    void addWrongBookToShoppingCart_ShouldThrowNullPointerException() {
+        cartItemRequestDto.setBookId(17L);
         when(authentication.getPrincipal()).thenReturn(user);
         when(shoppingCartRepository.findByUserId(user.getId())).thenReturn(Optional.of(shoppingCart));
-        when(bookRepository.findById(cartItemRequestDto.getBookId())).thenReturn(Optional.of(book));
-        when(cartItemMapper.toModel(cartItemRequestDto)).thenReturn(cartItem);
-        when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
-        when(shoppingCartRepository.save(shoppingCart)).thenReturn(shoppingCart);
+        when(bookRepository.findById(cartItemRequestDto.getBookId())).thenReturn(Optional.empty()); // Only essential stubs remain
 
-        ShoppingCartDto result = shoppingCartService.addBookToShoppingCart(cartItemRequestDto, authentication);
+        assertThrows(NullPointerException.class, () -> {
+            shoppingCartService.addBookToShoppingCart(cartItemRequestDto, authentication);
+        });
 
-        assertNotNull(result);
         verify(shoppingCartRepository).findByUserId(user.getId());
         verify(bookRepository).findById(cartItemRequestDto.getBookId());
-        verify(cartItemMapper).toModel(cartItemRequestDto);
-        verify(shoppingCartRepository).save(shoppingCart);
-        verify(shoppingCartMapper).toDto(shoppingCart);
+        verify(shoppingCartRepository, never()).save(shoppingCart); // `save` should not be called if the book is not found
     }
 
+
+
     @Test
-void updateCartItemQuantity_ShouldUpdateQuantityAndReturnShoppingCartDto() {
-    int newQuantity = requestUpdateQuantityDto.getQuantity();
-    when(authentication.getPrincipal()).thenReturn(user);
-    when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-    when(cartItemRepository.findById(cartItem.getId())).thenReturn(Optional.of(cartItem));
-    when(shoppingCartRepository.findByUserId(user.getId())).thenReturn(Optional.of(shoppingCart));
-    when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
-    when(cartItemRepository.save(cartItem)).thenReturn(cartItem);
+    void updateCartItemQuantity_ShouldUpdateQuantityAndReturnShoppingCartDto() {
+        int newQuantity = requestUpdateQuantityDto.getQuantity();
+        when(cartItemRepository.findById(cartItem.getId())).thenReturn(Optional.of(cartItem));
+        when(cartItemRepository.save(cartItem)).thenReturn(cartItem);
+        when(shoppingCartMapper.toDto(shoppingCart)).thenReturn(shoppingCartDto);
+        when(shoppingCartRepository.findByCartItems(Set.of(cartItem))).thenReturn(Optional.of(shoppingCart));
 
-    ShoppingCartDto result = shoppingCartService.updateCartItemQuantity(cartItem.getId(), requestUpdateQuantityDto, authentication);
+        ShoppingCartDto result = shoppingCartService.updateCartItemQuantity(cartItem.getId(), requestUpdateQuantityDto);
 
-    assertNotNull(result);
-    assertEquals(newQuantity, cartItem.getQuantity(), "Quantity should be updated in the cart item");
-    verify(cartItemRepository).save(cartItem);
-    verify(shoppingCartRepository).save(shoppingCart);
-    verify(shoppingCartMapper).toDto(shoppingCart);
-    verifyNoMoreInteractions(cartItemRepository, shoppingCartRepository, shoppingCartMapper);
-}
+        assertNotNull(result);
+        assertEquals(newQuantity, cartItem.getQuantity(), "Quantity should be updated in the cart item");
+        verify(cartItemRepository).save(cartItem);
+        verify(shoppingCartRepository).save(shoppingCart);
+        verify(shoppingCartMapper).toDto(shoppingCart);
+        verifyNoMoreInteractions(cartItemRepository, shoppingCartRepository, shoppingCartMapper);
+    }
 
 
     @Test

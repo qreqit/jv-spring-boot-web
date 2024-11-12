@@ -16,7 +16,6 @@ import mate.academy.springbootwebgreqit.repository.CartItemRepository;
 import mate.academy.springbootwebgreqit.repository.ShoppingCartRepository;
 import mate.academy.springbootwebgreqit.repository.UserRepository;
 import mate.academy.springbootwebgreqit.service.ShoppingCartService;
-import org.hibernate.Hibernate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -77,19 +76,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 }
         );
 
-        ShoppingCart savedshoppingCart = shoppingCartRepository.save(shoppingCart);
-        return shoppingCartMapper.toDto(savedshoppingCart);
+        shoppingCartRepository.save(shoppingCart);
+        return shoppingCartMapper.toDto(shoppingCart);
     }
 
     @Transactional
     @Override
     public ShoppingCartDto updateCartItemQuantity(Long cartItemId,
-                                                  UpdateCartItemDto quantity,
-                                                  Authentication authentication) {
+                                                  UpdateCartItemDto quantity) {
         if (quantity.getQuantity() <= 0) {
             throw new EntityNotFoundException("Quantity must be a positive integer");
         }
-        User user = (User) authentication.getPrincipal();
 
         CartItem cartItemToFindShoppingCart = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new EntityNotFoundException("Cart item not found with id: "
@@ -107,9 +104,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         cartItem.setQuantity(quantity.getQuantity());
         cartItemRepository.save(cartItem);
-        ShoppingCart savedShoppingCart = shoppingCartRepository.save(shoppingCart);
+        shoppingCartRepository.save(shoppingCart);
 
-        return shoppingCartMapper.toDto(savedShoppingCart);
+        return shoppingCartMapper.toDto(shoppingCart);
     }
 
     @Transactional

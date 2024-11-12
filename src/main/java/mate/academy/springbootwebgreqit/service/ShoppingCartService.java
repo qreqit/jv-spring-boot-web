@@ -15,8 +15,7 @@ public interface ShoppingCartService {
                                           Authentication authentication);
 
     ShoppingCartDto updateCartItemQuantity(Long cartItemId,
-                                           UpdateCartItemDto quantity,
-                                           Authentication authentication);
+                                           UpdateCartItemDto quantity);
 
     ShoppingCartDto removeCartItem(Long cartItemId,
                                    Authentication authentication);

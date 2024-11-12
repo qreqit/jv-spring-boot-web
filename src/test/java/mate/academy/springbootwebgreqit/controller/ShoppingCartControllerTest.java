@@ -21,6 +21,10 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
+        Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ShoppingCartControllerTest {
     protected static MockMvc mockMvc;
@@ -43,11 +47,8 @@ class ShoppingCartControllerTest {
 
 
     @Test
-    @Sql(scripts = {"/data-sql/create-books.sql",
-            "/data-sql/create-users.sql", "/data-sql/create-cart-item.sql"},
+    @Sql(scripts = {"/data-sql/create-cart-item.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
-            Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
     @DisplayName("Get shopping cart for the current user")
     void getShoppingCart_ShouldReturnCartForUser() throws Exception {
@@ -61,10 +62,6 @@ class ShoppingCartControllerTest {
     }
 
     @Test
-    @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql"},
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
-            Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
     @DisplayName("Add book to shopping cart")
     void addBookToShoppingCart_ShouldReturnUpdatedCart() throws Exception {
@@ -87,10 +84,8 @@ class ShoppingCartControllerTest {
 
 
     @Test
-    @Sql(scripts = {"/data-sql/create-books.sql",
-            "/data-sql/create-users.sql", "/data-sql/create-cart-item.sql"},
+    @Sql(scripts = {"/data-sql/create-cart-item.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
     @DisplayName("Update cart item quantity")
     void updateCartItemQuantity_ShouldReturnUpdatedQuantity() throws Exception {
@@ -109,11 +104,8 @@ class ShoppingCartControllerTest {
     }
 
     @Test
-    @Sql(scripts = {"/data-sql/create-books.sql", "/data-sql/create-users.sql",
-            "/data-sql/create-cart-item.sql"},
+    @Sql(scripts = {"/data-sql/create-cart-item.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/data-sql/clear-tables-for-sh.sql", executionPhase =
-            Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "john.doe@example.com", roles = {"USER"})
     @DisplayName("Remove item from cart")
     void removeItemFromCart_ShouldReturnEmptyCart() throws Exception {

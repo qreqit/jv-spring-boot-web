@@ -56,7 +56,7 @@ public class ShoppingCartController {
     public ShoppingCartDto updateCartItemQuantity(@PathVariable Long cartItemId,
                                                   @RequestBody @Valid UpdateCartItemDto quantity,
                                                   Authentication authentication) {
-        return shoppingCartService.updateCartItemQuantity(cartItemId, quantity, authentication);
+        return shoppingCartService.updateCartItemQuantity(cartItemId, quantity);
     }
 
     @Operation(summary = "Remove cart item")
