@@ -54,8 +54,7 @@ public class ShoppingCartController {
     })
     @PutMapping("/items/{cartItemId}")
     public ShoppingCartDto updateCartItemQuantity(@PathVariable Long cartItemId,
-                                                  @RequestBody @Valid UpdateCartItemDto quantity,
-                                                  Authentication authentication) {
+                                                  @RequestBody @Valid UpdateCartItemDto quantity) {
         return shoppingCartService.updateCartItemQuantity(cartItemId, quantity);
     }
 
