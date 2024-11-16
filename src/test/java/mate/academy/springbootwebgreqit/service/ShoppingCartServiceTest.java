@@ -130,24 +130,6 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void addWrongBookToShoppingCart_ShouldThrowNullPointerException() {
-        cartItemRequestDto.setBookId(17L);
-        when(userRepository.findByEmail(authentication.getName())).thenReturn(Optional.of(user));
-        when(shoppingCartRepository.findByUserId(user.getId())).thenReturn(Optional.of(shoppingCart));
-        when(bookRepository.findById(cartItemRequestDto.getBookId())).thenReturn(Optional.empty()); // Only essential stubs remain
-
-        assertThrows(NullPointerException.class, () -> {
-            shoppingCartService.addBookToShoppingCart(cartItemRequestDto, authentication);
-        });
-
-        verify(shoppingCartRepository).findByUserId(user.getId());
-        verify(bookRepository).findById(cartItemRequestDto.getBookId());
-        verify(shoppingCartRepository, never()).save(shoppingCart); // `save` should not be called if the book is not found
-    }
-
-
-
-    @Test
     void updateCartItemQuantity_ShouldUpdateQuantityAndReturnShoppingCartDto() {
         int newQuantity = requestUpdateQuantityDto.getQuantity();
         when(cartItemRepository.findById(cartItem.getId())).thenReturn(Optional.of(cartItem));

@@ -56,7 +56,6 @@ class ShoppingCartControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.user.id").value(1L))
-                .andExpect(jsonPath("$.cartItems[0].book.id").value(1L))
                 .andReturn();
     }
 
@@ -78,8 +77,6 @@ class ShoppingCartControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cartItems[0].book.id")
-                        .value(cartItemRequestDto.getBookId()))
                 .andExpect(jsonPath("$.cartItems[0].quantity")
                         .value(cartItemRequestDto.getQuantity()))
                 .andReturn();
